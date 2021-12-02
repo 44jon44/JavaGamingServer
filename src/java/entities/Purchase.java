@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -16,6 +17,7 @@ import javax.persistence.Entity;
  * @author ibai Arriola
  */
 @Entity
+@Table(name = "purchase", schema = "g5reto2")
 public class Purchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
