@@ -20,20 +20,35 @@ import javax.persistence.Id;
 public class Game implements Serializable {
 
     private static final long serialVersionUID = 1L;
+   
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    /**
+     * id del juego
+     */
     private Integer idGame;
-
+    /**
+     * Nombre del juego
+     */
     private String name;
-
+    /**
+     * Genero del juego
+     */
     private String genre;
-
+    /**
+     * Edad recomendado para jugar
+     */
     private Integer pegi;
-
+    /**
+     * Fecha de salida
+     */
     private Date relaseData;
-
+    /**
+     * Precio del juego
+     */
     private Float price;
 
+    //Getter y Setter  de la clase Game
     public Integer getIdGame() {
         return idGame;
     }
@@ -101,7 +116,10 @@ public class Game implements Serializable {
         }
         return true;
     }
-
+/**
+ * 
+ * @return  Retorna los valores del objeto a String
+ */
     @Override
     public String toString() {
         return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';
