@@ -7,49 +7,32 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
 
 /**
- *
+ 
  * @author ibai Arriola
  */
 @Entity
 public class Purchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @EmbeddedId
     private Long idPurchase;
-    private Game game;
     private Date purchaseDate;
-   //private Client client;
+   
 
     public Long getIdPurchase() {
         return idPurchase;
     }
-/*
-    public Client getClient() {
-        return client;
-    }
 
-    public void setClient(Client client) {
-        this.client = client;
-    }
-*/
+
     public void setIdPurchase(Long idPurchase) {
         this.idPurchase = idPurchase;
     }
 
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
 
     public Date getPurchaseDate() {
         return purchaseDate;
@@ -77,6 +60,6 @@ public class Purchase implements Serializable {
             return false;
         }
         return true;
-    }
-
+    }   
+    
 }
