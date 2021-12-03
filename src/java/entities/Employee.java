@@ -8,9 +8,15 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import static javax.persistence.FetchType.EAGER;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -19,6 +25,7 @@ import javax.persistence.Temporal;
 
 @Entity
 @Table(name="employee", schema="g5reto2")
+@XmlRootElement
 public class Employee extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,13 +33,14 @@ public class Employee extends User implements Serializable {
     /**
      * Fecha en la que el empleado fue contratado
      */
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     private Date hiringDate;
     /**
      * Salario que recibe el empleado
      */
     private Float salary;
-
+    @ManyToMany(mappedBy = "gamesEmployee", fetch = EAGER, cascade = CascadeType.ALL)
+    private Set<Game> games;
     /**
      * Método que devuelve la fecha en la que fue contratado el empleado
      *
@@ -71,10 +79,7 @@ public class Employee extends User implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 37 * hash + Objects.hashCode(this.hiringDate);
-        hash = 37 * hash + Objects.hashCode(this.salary);
-        return hash;
+        return super.hashCode();
     }
 
     @Override
@@ -89,18 +94,12 @@ public class Employee extends User implements Serializable {
             return false;
         }
         final Employee other = (Employee) obj;
-        if (!Objects.equals(this.hiringDate, other.hiringDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.salary, other.salary)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.getIdUser(), other.getIdUser());
     }
 
     @Override
     public String toString() {
-        return "Employee{" + "hiringDate=" + hiringDate + ", salary=" + salary + '}';
+        return "Employee{" + super.toString()+ "hiringDate=" + hiringDate + ", salary=" + salary + '}';
     }
 
 }

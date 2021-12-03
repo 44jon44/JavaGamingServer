@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Markel Lopez de Uralde
  */
 @Entity
-@Table(name = "PLATFORM", schema = "g5reto2")
+@Table(name = "platform", schema = "g5reto2")
 @XmlRootElement
 public class Platform implements Serializable {
 
@@ -123,7 +123,6 @@ public class Platform implements Serializable {
      */
     @Override
     public String toString() {
-        return "entities.Platform[ id=" + idPlatform + " ]";
+        return "Platform{" + "idPlatform=" + idPlatform + ", name=" + name + ", realizeDate=" + realizeDate + '}';
     }
-
 }

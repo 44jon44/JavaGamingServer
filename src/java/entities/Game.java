@@ -3,13 +3,19 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import static javax.persistence.FetchType.EAGER;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -17,6 +23,7 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "game", schema = "g5reto2")
+@XmlRootElement
 public class Game implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,16 +49,24 @@ public class Game implements Serializable {
     /**
      * Fecha de salida
      */
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     private Date relaseData;
     /**
      * Precio del juego
      */
     private Float price;
-    
-    @OneToMany
-    private Set<Purchase> purchases;
 
+
+
+    @ManyToMany(mappedBy = "gamesPlatform", fetch = EAGER, cascade = CascadeType.ALL)
+    private Set<Platform> platforms;
+
+    @ManyToMany(mappedBy = "gamesEmployee", fetch = EAGER, cascade = CascadeType.ALL)
+    private Set<Employee> employees;
+    
+    @OneToMany(mappedBy = "gamesPurchase", fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+    private Set<Purchase> purchases;
+    
     //Getter y Setter  de la clase Game
     public Integer getIdGame() {
         return idGame;
@@ -109,6 +124,14 @@ public class Game implements Serializable {
         this.purchases = purchases;
     }
 
+    public Set<Platform> getPlatform() {
+        return platforms;
+    }
+
+    public void setPlatform(Set<Platform> platforms) {
+        this.platforms = platforms;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -127,6 +150,11 @@ public class Game implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';
     }
 
 }

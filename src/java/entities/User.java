@@ -17,14 +17,19 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Clase de la que heredan Client y Employee.
+ *
  * @author Alex Hurtado
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(name="user", schema="g5reto2")
+@Table(name = "user", schema = "g5reto2")
+@XmlRootElement
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,45 +39,46 @@ public class User implements Serializable {
      * ID del usuario.
      */
     private Integer idUser;
-    
+
     /**
      * Login del usuario.
      */
     private String login;
-    
+
     /**
      * Email del usuario.
      */
     private String email;
-    
+
     /**
      * Nombre completo del usuario.
      */
     private String fullName;
-    
+
     /**
      * Status del usuario.
      */
     @Enumerated(EnumType.STRING)
     private UserStatus status;
-    
+
     /**
      * Privilegio del usuario.
      */
     @Enumerated(EnumType.STRING)
     private UserPrivilege privilege;
-    
+
     /**
      * Contraseña del usuario.
      */
     private String password;
-    
+
     /**
      * Timestamp del último cambio de contraseña del usuario.
      */
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp lastPasswordChange;
 
-     public Integer getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 
@@ -135,42 +141,42 @@ public class User implements Serializable {
     public void setLastPasswordChange(Timestamp lastPasswordChange) {
         this.lastPasswordChange = lastPasswordChange;
     }
+
     /**
      * Representación entera de una instancia de User.
-     * @return int 
+     *
+     * @return int
      */
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 43 * hash + Objects.hashCode(this.idUser);
         return hash;
-    } 
+    }
 
     /**
      * Compara dos objetos User para ver si son iguales.
+     *
      * @param obj El otro objeto User con el que comparar.
-     * @return 
+     * @return
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-        {
+        if (this == obj) {
             return true;
         }
-        if (obj == null)
-        {
+        if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass())
-        {
+        if (getClass() != obj.getClass()) {
             return false;
         }
         final User other = (User) obj;
         return Objects.equals(this.idUser, other.idUser);
-    } 
+    }
 
     @Override
     public String toString() {
         return "User{" + "idUser=" + idUser + ", login=" + login + ", email=" + email + ", fullName=" + fullName + ", status=" + status + ", privilege=" + privilege + ", password=" + password + ", lastPasswordChange=" + lastPasswordChange + '}';
-    } 
+    }
 }

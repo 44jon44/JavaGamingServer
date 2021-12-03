@@ -7,6 +7,7 @@ package entities;
 
 import java.io.Serializable;
 import javax.persistence.Embeddable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -14,12 +15,31 @@ import javax.persistence.Embeddable;
  * @author ibai Arriola
  */
 @Embeddable
+@XmlRootElement
 public class IdPurchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
     private Integer idGame;
+    
     private Integer idClient;
+
+    public Integer getIdGame() {
+        return idGame;
+    }
+
+    public void setIdGame(Integer idGame) {
+        this.idGame = idGame;
+    }
+
+    public Integer getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(Integer idClient) {
+        this.idClient = idClient;
+    }
+    
 
     @Override
     public int hashCode() {
