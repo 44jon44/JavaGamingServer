@@ -1,0 +1,176 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package entities;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+
+/**
+ * Clase de la que heredan Client y Employee.
+ * @author Alex Hurtado
+ */
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name="user", schema="g5reto2")
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    /**
+     * ID del usuario.
+     */
+    private Integer idUser;
+    
+    /**
+     * Login del usuario.
+     */
+    private String login;
+    
+    /**
+     * Email del usuario.
+     */
+    private String email;
+    
+    /**
+     * Nombre completo del usuario.
+     */
+    private String fullName;
+    
+    /**
+     * Status del usuario.
+     */
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+    
+    /**
+     * Privilegio del usuario.
+     */
+    @Enumerated(EnumType.STRING)
+    private UserPrivilege privilege;
+    
+    /**
+     * Contraseña del usuario.
+     */
+    private String password;
+    
+    /**
+     * Timestamp del último cambio de contraseña del usuario.
+     */
+    private Timestamp lastPasswordChange;
+
+     public Integer getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public UserPrivilege getPrivilege() {
+        return privilege;
+    }
+
+    public void setPrivilege(UserPrivilege privilege) {
+        this.privilege = privilege;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Timestamp getLastPasswordChange() {
+        return lastPasswordChange;
+    }
+
+    public void setLastPasswordChange(Timestamp lastPasswordChange) {
+        this.lastPasswordChange = lastPasswordChange;
+    }
+    /**
+     * Representación entera de una instancia de User.
+     * @return int 
+     */
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 43 * hash + Objects.hashCode(this.idUser);
+        return hash;
+    } 
+
+    /**
+     * Compara dos objetos User para ver si son iguales.
+     * @param obj El otro objeto User con el que comparar.
+     * @return 
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        final User other = (User) obj;
+        return Objects.equals(this.idUser, other.idUser);
+    } 
+
+    @Override
+    public String toString() {
+        return "User{" + "idUser=" + idUser + ", login=" + login + ", email=" + email + ", fullName=" + fullName + ", status=" + status + ", privilege=" + privilege + ", password=" + password + ", lastPasswordChange=" + lastPasswordChange + '}';
+    } 
+}
