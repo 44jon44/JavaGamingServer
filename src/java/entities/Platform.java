@@ -14,11 +14,13 @@ import static javax.persistence.FetchType.EAGER;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -48,7 +50,8 @@ public class Platform implements Serializable {
     /**
      * Relacion N:M con la clase Game
      */
-    @ManyToMany(mappedBy = "gamesPlatform", fetch = EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "gamesPlatform")
     private Set<Game> games;
 
     /**
@@ -78,6 +81,7 @@ public class Platform implements Serializable {
         this.realizeDate = realizeDate;
     }
 
+    @XmlTransient
     public Set<Game> getGames() {
         return games;
     }

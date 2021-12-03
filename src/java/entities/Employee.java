@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import static javax.persistence.FetchType.EAGER;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -39,7 +40,8 @@ public class Employee extends User implements Serializable {
      * Salario que recibe el empleado
      */
     private Float salary;
-    @ManyToMany(mappedBy = "gamesEmployee", fetch = EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "gamesEmployee")
     private Set<Game> games;
     /**
      * Método que devuelve la fecha en la que fue contratado el empleado

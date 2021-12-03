@@ -36,11 +36,11 @@ public class Purchase implements Serializable {
     private Date purchaseDate;
 
     
-    @MapsId("clientPurchases")
+    @MapsId("idClient")
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Client client;
     
-    @MapsId("gamesPurchase")
+    @MapsId("idGame")
     @ManyToOne(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
     private Game game;
     

@@ -6,7 +6,7 @@
 package entities;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -76,7 +76,7 @@ public class User implements Serializable {
      * Timestamp del último cambio de contraseña del usuario.
      */
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp lastPasswordChange;
+    private Date lastPasswordChange;
 
     public Integer getIdUser() {
         return idUser;
@@ -134,11 +134,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Timestamp getLastPasswordChange() {
+    public Date getLastPasswordChange() {
         return lastPasswordChange;
     }
 
-    public void setLastPasswordChange(Timestamp lastPasswordChange) {
+    public void setLastPasswordChange(Date lastPasswordChange) {
         this.lastPasswordChange = lastPasswordChange;
     }
 
