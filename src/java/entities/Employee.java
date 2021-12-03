@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 
 /**
@@ -17,6 +18,7 @@ import javax.persistence.Temporal;
  */
 
 @Entity
+@Table(name="employee", schema="g5reto2")
 public class Employee extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
