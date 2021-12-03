@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 
 /**
@@ -22,19 +23,20 @@ public class Purchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    private Long idPurchase;
+    private Integer idPurchase;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date purchaseDate;
-   
+  
+    private Game game;
+    private Client client;
 
-    public Long getIdPurchase() {
+    public Integer getIdPurchase() {
         return idPurchase;
     }
 
-
-    public void setIdPurchase(Long idPurchase) {
+    public void setIdPurchase(Integer idPurchase) {
         this.idPurchase = idPurchase;
     }
-
 
     public Date getPurchaseDate() {
         return purchaseDate;
@@ -43,6 +45,25 @@ public class Purchase implements Serializable {
     public void setPurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+    
+
+  
 
     @Override
     public int hashCode() {

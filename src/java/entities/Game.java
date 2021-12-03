@@ -7,7 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -40,12 +42,14 @@ public class Game implements Serializable {
     /**
      * Fecha de salida
      */
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date relaseData;
     /**
      * Precio del juego
      */
     private Float price;
-
+    
+    @OneToMany
     private Set<Purchase> purchases;
 
     //Getter y Setter  de la clase Game
