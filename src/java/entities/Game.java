@@ -10,6 +10,7 @@ import static javax.persistence.FetchType.EAGER;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -59,16 +60,20 @@ public class Game implements Serializable {
 
 
 
-    @ManyToMany(mappedBy = "gamesPlatform", fetch = EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "gamesPlatform")
     private Set<Platform> platforms;
 
-    @ManyToMany(mappedBy = "gamesEmployee", fetch = EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "gamesEmployee")
     private Set<Employee> employees;
     
-    @OneToMany(mappedBy = "gamesPurchase", fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+    @OneToMany(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "gamesPurchase")
     private Set<Purchase> purchases;
     
     //Getter y Setter  de la clase Game
+
     public Integer getIdGame() {
         return idGame;
     }
@@ -117,7 +122,22 @@ public class Game implements Serializable {
         this.price = price;
     }
 
-    @XmlTransient
+    public Set<Platform> getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(Set<Platform> platforms) {
+        this.platforms = platforms;
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
+
     public Set<Purchase> getPurchases() {
         return purchases;
     }
@@ -125,14 +145,7 @@ public class Game implements Serializable {
     public void setPurchases(Set<Purchase> purchases) {
         this.purchases = purchases;
     }
-
-    public Set<Platform> getPlatform() {
-        return platforms;
-    }
-
-    public void setPlatform(Set<Platform> platforms) {
-        this.platforms = platforms;
-    }
+    
 
     @Override
     public int hashCode() {

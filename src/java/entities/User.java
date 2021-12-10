@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Alex Hurtado
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "user", schema = "g5reto2")
 @XmlRootElement
 public class User implements Serializable {
@@ -141,6 +141,8 @@ public class User implements Serializable {
     public void setLastPasswordChange(Date lastPasswordChange) {
         this.lastPasswordChange = lastPasswordChange;
     }
+
+  
 
     /**
      * Representación entera de una instancia de User.

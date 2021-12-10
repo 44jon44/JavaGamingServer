@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -36,7 +37,8 @@ public class Client extends User implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date signUpDate;
 
-    @OneToMany(mappedBy = "clientPurchases", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "clientPurchases")
     private Set<Purchase> purchases;
 
     public Date getSignUpDate() {
@@ -46,6 +48,16 @@ public class Client extends User implements Serializable {
     public void setSignUpDate(Date signUpDate) {
         this.signUpDate = signUpDate;
     }
+
+    public Set<Purchase> getPurchases() {
+        return purchases;
+    }
+
+    public void setPurchases(Set<Purchase> purchases) {
+        this.purchases = purchases;
+    }
+
+   
 
     @Override
     public int hashCode() {

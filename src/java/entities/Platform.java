@@ -54,9 +54,6 @@ public class Platform implements Serializable {
     @JoinTable(schema = "g5reto2", name = "gamesPlatform")
     private Set<Game> games;
 
-    /**
-     * Getters y setters
-     */
     public Integer getIdPlatform() {
         return idPlatform;
     }
@@ -81,12 +78,14 @@ public class Platform implements Serializable {
         this.realizeDate = realizeDate;
     }
 
-    @XmlTransient
     public Set<Game> getGames() {
         return games;
     }
 
-    public void setGames(Set<Game> games) {
+    /**
+     * Getters y setters
+     */
+    public void setGames(Set<Game> games) {   
         this.games = games;
     }
 

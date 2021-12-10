@@ -43,7 +43,7 @@ public class Purchase implements Serializable {
     @MapsId("idGame")
     @ManyToOne(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
     private Game game;
-    
+
     public IdPurchase getIdPurchase() {
         return idPurchase;
     }
@@ -60,14 +60,6 @@ public class Purchase implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
     public Client getClient() {
         return client;
     }
@@ -75,6 +67,16 @@ public class Purchase implements Serializable {
     public void setClient(Client client) {
         this.client = client;
     }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+    
+   
 
     @Override
     public int hashCode() {
