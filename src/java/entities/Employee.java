@@ -41,7 +41,7 @@ public class Employee extends User implements Serializable {
      */
     private Float salary;
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
-    @JoinTable(schema = "g5reto2", name = "gamesEmployee")
+    @JoinTable(schema = "g5reto2", name = "game_employee")
     private Set<Game> games;
     /**
      * Método que devuelve la fecha en la que fue contratado el empleado

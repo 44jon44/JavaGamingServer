@@ -38,7 +38,7 @@ public class Client extends User implements Serializable {
     private Date signUpDate;
 
     @OneToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(schema = "g5reto2", name = "clientPurchases")
+    @JoinTable(schema = "g5reto2", name = "client_purchase")
     private Set<Purchase> purchases;
 
     public Date getSignUpDate() {

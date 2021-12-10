@@ -51,7 +51,7 @@ public class Platform implements Serializable {
      * Relacion N:M con la clase Game
      */
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
-    @JoinTable(schema = "g5reto2", name = "gamesPlatform")
+    @JoinTable(schema = "g5reto2", name = "game_platform")
     private Set<Game> games;
 
     public Integer getIdPlatform() {
