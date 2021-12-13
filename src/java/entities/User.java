@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Alex Hurtado
  */
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "user", schema = "g5reto2")
