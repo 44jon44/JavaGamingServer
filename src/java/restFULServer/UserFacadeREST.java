@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
  * @author ibai Arriola
  */
 @Stateless
-@Path("entities.user")
+@Path("user")
 public class UserFacadeREST extends AbstractFacade<User> {
 
     @PersistenceContext(unitName = "JavaGamingServerPU")

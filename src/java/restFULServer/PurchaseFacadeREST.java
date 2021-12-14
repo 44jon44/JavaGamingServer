@@ -27,7 +27,7 @@ import javax.ws.rs.core.PathSegment;
  * @author ibai Arriola
  */
 @Stateless
-@Path("entities.purchase")
+@Path("purchase")
 public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
 
     @PersistenceContext(unitName = "JavaGamingServerPU")

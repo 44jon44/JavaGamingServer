@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import static javax.persistence.FetchType.EAGER;
 import javax.persistence.JoinTable;
@@ -26,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name="employee", schema="g5reto2")
+@DiscriminatorValue("employee")
 @XmlRootElement
 public class Employee extends User implements Serializable {
 
