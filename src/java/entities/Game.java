@@ -58,8 +58,6 @@ public class Game implements Serializable {
      */
     private Float price;
 
-
-
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_platform")
     private Set<Platform> platforms;
@@ -67,13 +65,12 @@ public class Game implements Serializable {
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_employee")
     private Set<Employee> employees;
-    
-    @OneToMany(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_purchase")
     private Set<Purchase> purchases;
-    
-    //Getter y Setter  de la clase Game
 
+    //Getter y Setter  de la clase Game
     public Integer getIdGame() {
         return idGame;
     }
@@ -122,6 +119,7 @@ public class Game implements Serializable {
         this.price = price;
     }
 
+    @XmlTransient
     public Set<Platform> getPlatforms() {
         return platforms;
     }
@@ -138,6 +136,7 @@ public class Game implements Serializable {
         this.employees = employees;
     }
 
+    @XmlTransient
     public Set<Purchase> getPurchases() {
         return purchases;
     }
@@ -145,7 +144,6 @@ public class Game implements Serializable {
     public void setPurchases(Set<Purchase> purchases) {
         this.purchases = purchases;
     }
-    
 
     @Override
     public int hashCode() {

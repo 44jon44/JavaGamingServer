@@ -19,20 +19,20 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author jon
  */
-
 @Entity
-@Table(name="employee", schema="g5reto2")
+@Table(name = "employee", schema = "g5reto2")
 @DiscriminatorValue("employee")
 @XmlRootElement
 public class Employee extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Fecha en la que el empleado fue contratado
      */
@@ -42,14 +42,20 @@ public class Employee extends User implements Serializable {
      * Salario que recibe el empleado
      */
     private Float salary;
+
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_employee")
     private Set<Game> games;
-    /**
-     * Método que devuelve la fecha en la que fue contratado el empleado
-     *
-     * @return hiringDate
-     */
+
+    public Set<Game> getGames() {
+        return games;
+    }
+
+    @XmlTransient
+    public void setGames(Set<Game> games) {
+        this.games = games;
+    }
+
     public Date getHiringDate() {
         return hiringDate;
     }
@@ -103,7 +109,7 @@ public class Employee extends User implements Serializable {
 
     @Override
     public String toString() {
-        return "Employee{" + super.toString()+ "hiringDate=" + hiringDate + ", salary=" + salary + '}';
+        return "Employee{" + super.toString() + "hiringDate=" + hiringDate + ", salary=" + salary + '}';
     }
 
 }

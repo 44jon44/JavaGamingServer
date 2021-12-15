@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -28,20 +29,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Purchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @EmbeddedId
     private IdPurchase idPurchase;
-    
+
     @Temporal(TemporalType.DATE)
     private Date purchaseDate;
 
-    
     @MapsId("idClient")
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Client client;
-    
+
     @MapsId("idGame")
-    @ManyToOne(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Game game;
 
     public IdPurchase getIdPurchase() {
@@ -64,6 +64,7 @@ public class Purchase implements Serializable {
         return client;
     }
 
+    @XmlTransient
     public void setClient(Client client) {
         this.client = client;
     }
@@ -75,8 +76,6 @@ public class Purchase implements Serializable {
     public void setGame(Game game) {
         this.game = game;
     }
-    
-   
 
     @Override
     public int hashCode() {
