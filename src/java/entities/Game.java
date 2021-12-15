@@ -3,13 +3,21 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import static javax.persistence.FetchType.EAGER;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -17,6 +25,7 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "game", schema = "g5reto2")
+@XmlRootElement
 public class Game implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,14 +51,23 @@ public class Game implements Serializable {
     /**
      * Fecha de salida
      */
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     private Date relaseData;
     /**
      * Precio del juego
      */
     private Float price;
-    
-    @OneToMany
+
+    @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "game_platform")
+    private Set<Platform> platforms;
+
+    @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "game_employee")
+    private Set<Employee> employees;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "game_purchase")
     private Set<Purchase> purchases;
 
     //Getter y Setter  de la clase Game
@@ -101,6 +119,24 @@ public class Game implements Serializable {
         this.price = price;
     }
 
+    @XmlTransient
+    public Set<Platform> getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(Set<Platform> platforms) {
+        this.platforms = platforms;
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
+
+    @XmlTransient
     public Set<Purchase> getPurchases() {
         return purchases;
     }
@@ -127,6 +163,11 @@ public class Game implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';
     }
 
 }

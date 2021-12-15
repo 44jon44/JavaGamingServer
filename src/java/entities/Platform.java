@@ -14,18 +14,20 @@ import static javax.persistence.FetchType.EAGER;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+
 /**
  *
  * @author Markel Lopez de Uralde
  */
 @Entity
-@Table(name = "PLATFORM", schema = "g5reto2")
+@Table(name = "platform", schema = "g5reto2")
 @XmlRootElement
 public class Platform implements Serializable {
 
@@ -48,12 +50,10 @@ public class Platform implements Serializable {
     /**
      * Relacion N:M con la clase Game
      */
-    @ManyToMany(mappedBy = "gamesPlatform", fetch = EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
+    @JoinTable(schema = "g5reto2", name = "game_platform")
     private Set<Game> games;
 
-    /**
-     * Getters y setters
-     */
     public Integer getIdPlatform() {
         return idPlatform;
     }
@@ -82,7 +82,10 @@ public class Platform implements Serializable {
         return games;
     }
 
-    public void setGames(Set<Game> games) {
+    /**
+     * Getters y setters
+     */
+    public void setGames(Set<Game> games) {   
         this.games = games;
     }
 
@@ -123,7 +126,6 @@ public class Platform implements Serializable {
      */
     @Override
     public String toString() {
-        return "entities.Platform[ id=" + idPlatform + " ]";
+        return "Platform{" + "idPlatform=" + idPlatform + ", name=" + name + ", realizeDate=" + realizeDate + '}';
     }
-
 }

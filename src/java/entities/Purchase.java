@@ -7,34 +7,48 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
- 
+ *
  * @author ibai Arriola
  */
 @Entity
 @Table(name = "purchase", schema = "g5reto2")
+@XmlRootElement
 public class Purchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @EmbeddedId
-    private Integer idPurchase;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    private IdPurchase idPurchase;
+
+    @Temporal(TemporalType.DATE)
     private Date purchaseDate;
-  
-    private Game game;
+
+    @MapsId("idClient")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Client client;
 
-    public Integer getIdPurchase() {
+    @MapsId("idGame")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Game game;
+
+    public IdPurchase getIdPurchase() {
         return idPurchase;
     }
 
-    public void setIdPurchase(Integer idPurchase) {
+    public void setIdPurchase(IdPurchase idPurchase) {
         this.idPurchase = idPurchase;
     }
 
@@ -46,6 +60,15 @@ public class Purchase implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
+    @XmlTransient
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
     public Game getGame() {
         return game;
     }
@@ -53,17 +76,6 @@ public class Purchase implements Serializable {
     public void setGame(Game game) {
         this.game = game;
     }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-    
-
-  
 
     @Override
     public int hashCode() {
@@ -83,6 +95,6 @@ public class Purchase implements Serializable {
             return false;
         }
         return true;
-    }   
-    
+    }
+
 }
