@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,11 +25,19 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author ibai Arriola
  */
+
+
 @Entity
 @Table(name = "game", schema = "g5reto2")
 @XmlRootElement
-public class Game implements Serializable {
 
+@NamedQueries({
+   @NamedQuery(name="findGamebyGenre",query="SELECT a FROM Game a WHERE a.genre =:genre"
+),
+   @NamedQuery(name="findGamebyPegi",query="SELECT a FROM Game a WHERE a.pegi =:pegi")
+})
+public class Game implements Serializable {
+    
     private static final long serialVersionUID = 1L;
 
     @Id
