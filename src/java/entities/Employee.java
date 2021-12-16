@@ -15,19 +15,16 @@ import javax.persistence.Entity;
 import static javax.persistence.FetchType.EAGER;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author jon
  */
 @Entity
-@Table(name = "employee", schema = "g5reto2")
-@DiscriminatorValue("employee")
+@DiscriminatorValue("EMPLOYEE")
 @XmlRootElement
 public class Employee extends User implements Serializable {
 
@@ -38,24 +35,20 @@ public class Employee extends User implements Serializable {
      */
     @Temporal(TemporalType.DATE)
     private Date hiringDate;
+
     /**
      * Salario que recibe el empleado
      */
     private Float salary;
-
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_employee")
     private Set<Game> games;
 
-    public Set<Game> getGames() {
-        return games;
-    }
-
-    @XmlTransient
-    public void setGames(Set<Game> games) {
-        this.games = games;
-    }
-
+    /**
+     * Método que devuelve la fecha en la que fue contratado el empleado
+     *
+     * @return hiringDate
+     */
     public Date getHiringDate() {
         return hiringDate;
     }
@@ -94,13 +87,16 @@ public class Employee extends User implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
+        {
             return true;
         }
-        if (obj == null) {
+        if (obj == null)
+        {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
+        {
             return false;
         }
         final Employee other = (Employee) obj;
@@ -111,5 +107,4 @@ public class Employee extends User implements Serializable {
     public String toString() {
         return "Employee{" + super.toString() + "hiringDate=" + hiringDate + ", salary=" + salary + '}';
     }
-
 }
