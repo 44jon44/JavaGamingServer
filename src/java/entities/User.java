@@ -8,8 +8,8 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,6 +21,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,7 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "user", schema = "g5reto2")
-@DiscriminatorColumn(name="user_type",discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name="privilege")
 @XmlRootElement
 public class User implements Serializable {
 
@@ -68,6 +69,8 @@ public class User implements Serializable {
     /**
      * Privilegio del usuario.
      */
+    @NotNull
+    @Column(insertable = false,updatable = false)
     @Enumerated(EnumType.STRING)
     private UserPrivilege privilege;
 
@@ -145,8 +148,6 @@ public class User implements Serializable {
     public void setLastPasswordChange(Date lastPasswordChange) {
         this.lastPasswordChange = lastPasswordChange;
     }
-
-  
 
     /**
      * Representación entera de una instancia de User.
