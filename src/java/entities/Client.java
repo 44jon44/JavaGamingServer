@@ -27,8 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Alex Hurtado
  */
 @Entity
-@Table(name = "client", schema = "g5reto2")
-@DiscriminatorValue("client")
+@DiscriminatorValue("CLIENT")
 @XmlRootElement
 public class Client extends User implements Serializable {
 

@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import static javax.persistence.FetchType.EAGER;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,9 +28,14 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author jon
  */
 @Entity
-@Table(name = "employee", schema = "g5reto2")
-@DiscriminatorValue("employee")
+@DiscriminatorValue("EMPLOYEE")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "employeesByName", query = "SELECT u FROM User u WHERE u.fullName =:fullName"
+    ),
+    @NamedQuery(name = "orderEmployeeBySalary", query = "SELECT u FROM User u WHERE u.fullName = :fullname AND u.privilege = :privilege"
+     )
+})
 public class Employee extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -111,5 +118,4 @@ public class Employee extends User implements Serializable {
     public String toString() {
         return "Employee{" + super.toString() + "hiringDate=" + hiringDate + ", salary=" + salary + '}';
     }
-
 }
