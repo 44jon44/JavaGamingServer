@@ -84,7 +84,10 @@ public class User implements Serializable {
      */
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastPasswordChange;
-
+/**
+ * 
+ * Metodos getter y setter
+ */
     public Integer getIdUser() {
         return idUser;
     }

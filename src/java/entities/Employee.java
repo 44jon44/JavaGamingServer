@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
- *
+ *Entidad  Empleado que extiende de la entidad User
  * @author jon
  */
 @Entity
