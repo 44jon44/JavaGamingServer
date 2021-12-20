@@ -15,9 +15,10 @@ import javax.persistence.Entity;
 import static javax.persistence.FetchType.EAGER;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
 
 /**
  *
@@ -26,6 +27,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @DiscriminatorValue("EMPLOYEE")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "employeesByName", query = "SELECT u FROM User u WHERE u.fullName =:fullName"
+    ),
+    @NamedQuery(name = "orderEmployeeBySalary", query = "SELECT u FROM User u WHERE u.fullName = :fullname AND u.privilege = :privilege"
+     )
+})
 public class Employee extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
