@@ -6,6 +6,7 @@
 package restFULServer;
 
 import entities.Employee;
+import entities.UserPrivilege;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,7 +101,7 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
         try {
             LOGGER.info("Filtrado por nombre");
             employeesByName = em.createNamedQuery("employeesByName")
-                    .setParameter("fullName", fullName).getResultList();
+                    .setParameter("fullName", fullName).setParameter("privilege", UserPrivilege.EMPLOYEE).getResultList();
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error al buscar empleados por nombre{0}", ex.getLocalizedMessage());
             throw new InternalServerErrorException(ex);
