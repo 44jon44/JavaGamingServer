@@ -20,8 +20,7 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Clase Client
- *
+ * entidad cliente  que es extiende de la entidad user
  * @author Alex Hurtado
  */
 @Entity
@@ -36,10 +35,15 @@ public class Client extends User implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date signUpDate;
 
+    /**
+     * lista de compras reliazada por el cliente
+     */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "client_purchase")
     private Set<Purchase> purchases;
 
+    
+    //getters y setters de la entidad cliente//
     public Date getSignUpDate() {
         return signUpDate;
     }
@@ -78,7 +82,10 @@ public class Client extends User implements Serializable {
         final Client other = (Client) obj;
         return Objects.equals(this.getIdUser(), other.getIdUser());
     }
-
+/**
+ *  
+ * @return retorna los datos de un cliente
+ */
     @Override
     public String toString() {
         return "Client{" + super.toString() + "signUpDate=" + signUpDate + '}';

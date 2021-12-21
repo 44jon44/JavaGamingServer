@@ -6,6 +6,8 @@ package entities;
 /**
  *
  * @author Alex Hurtado
+ * 
+ * privilegios que pueden tener un usuario
  */
 public enum UserPrivilege {
     ADMIN,

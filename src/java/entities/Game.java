@@ -22,28 +22,30 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
+ * Java bean de la entidad Game.
  *
  * @author ibai Arriola
  */
-
-
 @Entity
 @Table(name = "game", schema = "g5reto2")
 @XmlRootElement
-
+/**
+ * Queries propias en las que filtramos una busqueda por Genero o Pegi
+ */
 @NamedQueries({
-   @NamedQuery(name="findGamebyGenre",query="SELECT a FROM Game a WHERE a.genre =:genre"
-),
-   @NamedQuery(name="findGamebyPegi",query="SELECT a FROM Game a WHERE a.pegi =:pegi")
+    @NamedQuery(name = "findGamebyGenre", query = "SELECT a FROM Game a WHERE a.genre =:genre"
+    )
+    ,
+   @NamedQuery(name = "findGamebyPegi", query = "SELECT a FROM Game a WHERE a.pegi =:pegi")
 })
 public class Game implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     /**
-     * id del juego
+     * id del juego Y primary key
      */
     private Integer idGame;
     /**
@@ -67,15 +69,15 @@ public class Game implements Serializable {
      * Precio del juego
      */
     private Float price;
-
+    //lista de  plataformas
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_platform")
     private Set<Platform> platforms;
-
+    //lista de empelados
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_employee")
     private Set<Employee> employees;
-
+    //lista de juegos comprados
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_purchase")
     private Set<Purchase> purchases;
@@ -174,7 +176,7 @@ public class Game implements Serializable {
         }
         return true;
     }
-
+    //mostrar los diferentes juegos 
     @Override
     public String toString() {
         return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';

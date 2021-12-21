@@ -32,18 +32,25 @@ public class Purchase implements Serializable {
 
     @EmbeddedId
     private IdPurchase idPurchase;
-
+/**
+ * Fecha en la que se produjo la compra
+ */
     @Temporal(TemporalType.DATE)
     private Date purchaseDate;
-
+/**
+ * id del cliente que hizo la compra
+ */
     @MapsId("idClient")
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Client client;
-
+/**
+ * id del juego que se compro
+ */
     @MapsId("idGame")
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Game game;
-
+   
+   //Metodos getters y setters 
     public IdPurchase getIdPurchase() {
         return idPurchase;
     }
@@ -95,6 +102,14 @@ public class Purchase implements Serializable {
             return false;
         }
         return true;
+    }
+/**
+ * 
+ * @return devuelve los datos 
+ */
+    @Override
+    public String toString() {
+        return "Purchase{" + "idPurchase=" + idPurchase + ", purchaseDate=" + purchaseDate + ", client=" + client + ", game=" + game + '}';
     }
 
 }
