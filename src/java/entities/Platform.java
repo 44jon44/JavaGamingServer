@@ -33,7 +33,7 @@ public class Platform implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
-     * Clave unica autogenerada para la plataforma
+     * Clave unica autogenerada  para la plataforma
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -54,6 +54,7 @@ public class Platform implements Serializable {
     @JoinTable(schema = "g5reto2", name = "game_platform")
     private Set<Game> games;
 
+    //getter y setters
     public Integer getIdPlatform() {
         return idPlatform;
     }

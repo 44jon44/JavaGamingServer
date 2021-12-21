@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
- *
+ *Entidad  Empleado que extiende de la entidad User
  * @author jon
  */
 @Entity
@@ -87,11 +87,6 @@ public class Employee extends User implements Serializable {
      */
     public void setSalary(Float salary) {
         this.salary = salary;
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 
     @Override
