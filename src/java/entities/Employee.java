@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @DiscriminatorValue("EMPLOYEE")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "employeesByName", query = "SELECT u FROM User u WHERE u.fullName =:fullName"
+    @NamedQuery(name = "employeesByName", query = "SELECT u FROM User u WHERE u.fullName =:fullName AND u.privilege = :privilege"
     ),
     @NamedQuery(name = "orderEmployeeBySalary", query = "SELECT u FROM User u WHERE u.fullName = :fullname AND u.privilege = :privilege"
      )
