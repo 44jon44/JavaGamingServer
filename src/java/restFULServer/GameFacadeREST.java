@@ -96,14 +96,14 @@ public class GameFacadeREST extends AbstractFacade<Game> {
 
 ////////////////////////////////////////////////////////////////////////////////
     @GET
-    @Path("genre/{genre}")
+    @Path("genre/{genre}/{name}")
     @Produces({MediaType.APPLICATION_XML})
-    public List<Game> findGamebyGenre(@PathParam("genre") String genre) {
+    public List<Game> findGamebyGenre(@PathParam("genre") String genre,@PathParam("name") String name) {
         List<Game> gamesbyGenre = null;
         try {
             LOGGER.info("filtrado por genero");
             gamesbyGenre = em.createNamedQuery("findGamebyGenre")
-                    .setParameter("genre", genre).getResultList();
+                    .setParameter("genre", genre).setParameter("name", name).getResultList();
         } catch (Exception ex) {
             LOGGER.severe("error al listar juegos por genero."
                     + ex.getLocalizedMessage());
