@@ -5,14 +5,17 @@
  */
 package restFULServer;
 
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import entities.Platform;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -22,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  *
- * @author ibai Arriola
+ * @author Markel Lopez de uralde
  */
 @Stateless
 @Path("platform")
@@ -82,7 +85,23 @@ public class PlatformFacadeREST extends AbstractFacade<Platform> {
     public String countREST() {
         return String.valueOf(super.count());
     }
-
+    /**
+     * Coje la lista de nombres por el parametro buscado
+     * @param name
+     * @return una lista de plataform
+     */
+    @GET
+    @Path("name/{name}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List <Platform> findPlatformsByName(@PathParam("name") String name) {
+        LOGGER.log(Level.INFO, "Metodo find by name de la clase platform");
+        try {
+            return super.findPlatformsByName(name);
+        } catch (Exception ex) {
+            LOGGER.severe(ex.getMessage());
+            throw new InternalServerErrorException(ex.getMessage());
+        }
+    }
     @Override
     protected EntityManager getEntityManager() {
         return em;

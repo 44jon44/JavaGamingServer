@@ -16,11 +16,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -28,6 +30,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "platform", schema = "g5reto2")
+@NamedQueries({
+    @NamedQuery(name = "findPlatformsByName",
+            query = "SELECT p FROM Platform p WHERE p.name=:name")
+    ,
+    @NamedQuery(name = "",
+            query = "")
+})
 @XmlRootElement
 public class Platform implements Serializable {
 
@@ -54,6 +63,11 @@ public class Platform implements Serializable {
     @JoinTable(schema = "g5reto2", name = "game_platform")
     private Set<Game> games;
 
+    /**
+     * Getters y setters
+     *
+     * @return
+     */
     public Integer getIdPlatform() {
         return idPlatform;
     }
@@ -82,10 +96,7 @@ public class Platform implements Serializable {
         return games;
     }
 
-    /**
-     * Getters y setters
-     */
-    public void setGames(Set<Game> games) {   
+    public void setGames(Set<Game> games) {
         this.games = games;
     }
 
