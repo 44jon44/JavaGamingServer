@@ -93,7 +93,7 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    @GET
+     @GET
     @Path("fullName/{fullName}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Employee> employeesByName(@PathParam("fullName") String fullName) {
@@ -112,11 +112,11 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
     @GET
     @Path("salary/{salary}")
     @Produces({MediaType.APPLICATION_XML})
-    public List<Employee> orderEmployeeBySalary(@PathParam("salary") Float salary) {
+    public List<Employee> employeeBySalary(@PathParam("salary") Float salary) {
         List<Employee> orderEmployeeBySalary = null;
         try {
             LOGGER.info("Orden por salario");
-            orderEmployeeBySalary = em.createNamedQuery("orderEmployeeBySalary")
+            orderEmployeeBySalary = em.createNamedQuery("employeeBySalary")
                     .setParameter("salary", salary)
                     
                     .getResultList();
