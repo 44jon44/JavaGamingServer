@@ -93,7 +93,7 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    @GET
+     @GET
     @Path("fullName/{fullName}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Employee> employeesByName(@PathParam("fullName") String fullName) {
@@ -101,7 +101,8 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
         try {
             LOGGER.info("Filtrado por nombre");
             employeesByName = em.createNamedQuery("employeesByName")
-                    .setParameter("fullName", fullName).setParameter("privilege", UserPrivilege.EMPLOYEE).getResultList();
+                    .setParameter("fullName", fullName)
+                    .setParameter("privilege", UserPrivilege.EMPLOYEE).getResultList();
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error al buscar empleados por nombre{0}", ex.getLocalizedMessage());
             throw new InternalServerErrorException(ex);
@@ -109,18 +110,21 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
         return employeesByName;
     }
     @GET
-    @Path("salario/{salary}")
+    @Path("salary/{salary}")
     @Produces({MediaType.APPLICATION_XML})
-    public List<Employee> orderEmployeeBySalary(@PathParam("salary") Float salary) {
-        List<Employee> employeesByName = null;
+    public List<Employee> employeeBySalary(@PathParam("salary") Float salary) {
+        List<Employee> orderEmployeeBySalary = null;
         try {
             LOGGER.info("Orden por salario");
-            employeesByName = em.createNamedQuery("orderEmployeeBySalary")
+            orderEmployeeBySalary = em.createNamedQuery("employeeBySalary")
+                    .setParameter("salary", salary)
+                    
                     .getResultList();
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error al ordenar empleados por salario{0}", ex.getLocalizedMessage());
-            throw new InternalServerErrorException(ex);
+            throw new AbstractMethodError();
         }
-        return employeesByName;
+        return orderEmployeeBySalary;
     }
+
 }
