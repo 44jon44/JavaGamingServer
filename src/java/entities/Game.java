@@ -33,12 +33,13 @@ import javax.xml.bind.annotation.XmlTransient;
  * Queries propias en las que filtramos una busqueda por Genero o Pegi
  */
 @NamedQueries({
-    @NamedQuery(name="findGamebyGenre",query="SELECT g FROM Game g "
+    @NamedQuery(name="findGamebyGenreAndPlat",query="SELECT g FROM Game g "
            + "WHERE g.genre =:genre AND g.idGame in (SELECT g2 FROM Platform p "
            + "JOIN p.games g2 WHERE p.name=:name) "
     )
     ,
-   @NamedQuery(name = "findGamebyPegi", query = "SELECT a FROM Game a WHERE a.pegi =:pegi")
+   @NamedQuery(name = "findGamebyPegi", query = "SELECT a FROM Game a WHERE a.pegi =:pegi"),
+   @NamedQuery(name = "findGamebyGenre",query = "SELECT g FROM Game g WHERE g.genre =:genre")
 })
 public class Game implements Serializable {
 
