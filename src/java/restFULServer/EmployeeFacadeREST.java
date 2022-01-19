@@ -54,6 +54,11 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
     public void edit(@PathParam("id") Integer id, Employee entity) {
         super.edit(entity);
     }
+    @PUT
+    @Consumes({MediaType.APPLICATION_XML})
+    public void update(Employee entity) {
+        super.edit(entity);
+    }
 
     @DELETE
     @Path("{id}")
