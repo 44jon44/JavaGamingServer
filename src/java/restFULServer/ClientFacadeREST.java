@@ -86,7 +86,7 @@ public class ClientFacadeREST extends AbstractFacade<Client> {
     }
     
     //Consultas personalizadas
-     @GET
+    @GET
     @Path("fullName/{fullName}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Client> findGamebyPegi(@PathParam("fullName") String fullName) {
@@ -95,6 +95,7 @@ public class ClientFacadeREST extends AbstractFacade<Client> {
         .CLIENT).getResultList();
         return clientsByFullName;
     }
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;

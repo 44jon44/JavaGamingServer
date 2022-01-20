@@ -32,13 +32,11 @@ import javax.xml.bind.annotation.XmlTransient;
     //RUD
     @NamedQuery(name = "deletePurchase", query = "DELETE FROM Purchase p WHERE p.idPurchase = :idPurchase"
     ),
-    @NamedQuery(name = "updatePurchase", query = "UPDATE Purchase SET purchaseDate = :purchaseDate, client = :client, game = :game"
+    @NamedQuery(name = "findPurchasesByClientId", query = "SELECT p FROM Purchase p WHERE p.client.idUser =:idUser"
     ),
-    @NamedQuery(name = "findPurchasesByClient", query = ""
+    @NamedQuery(name = "findPurchasesByPurDate", query = "SELECT p FROM Purchase p WHERE p.purchaseDate = :purchaseDate"
     ),
-    @NamedQuery(name = "findPurchasesByPurDate", query = ""
-    ),
-    @NamedQuery(name = "findPurchasesByPrice", query = ""
+    @NamedQuery(name = "findPurchasesByPrice", query = "SELECT p FROM Purchase p WHERE p.game.price = :price"
      )
 })
 public class Purchase implements Serializable {
@@ -79,7 +77,7 @@ public class Purchase implements Serializable {
         return client;
     }
 
-    @XmlTransient
+    //@XmlTransient
     public void setClient(Client client) {
         this.client = client;
     }
