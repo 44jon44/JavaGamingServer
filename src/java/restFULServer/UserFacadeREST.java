@@ -92,4 +92,15 @@ public class UserFacadeREST extends AbstractFacade<User> {
         return em;
     }
     
+    @GET
+    @Path("login/{login}")
+    @Produces({MediaType.APPLICATION_XML})
+    public User findUserByLogin(@PathParam("login") String login) {
+        List<User> users = em.createNamedQuery("findUserByLogin").setParameter("login", login).getResultList();
+        User user = null;
+        if(users.size() == 1){
+            user = users.get(0);
+        }
+        return user;
+    }
 }
