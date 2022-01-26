@@ -8,6 +8,7 @@ package security;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +22,8 @@ public class Hashing {
 
     //Logger de clase Hashing
     private static final Logger LOG = Logger.getLogger(Hashing.class.getName());
-
+    private static final ResourceBundle RB = ResourceBundle.getBundle("security.hash");
+    public static final String SALT = RB.getString("SALT");
     /**
      * Este método se encarga de hashear la contraseña. Se utiliza también un
      * salt para añadir más seguridad.
