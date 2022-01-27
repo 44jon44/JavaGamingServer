@@ -6,6 +6,8 @@
 package restFULServer;
 
 import entities.User;
+import entities.UserPrivilege;
+import exception.EmailNotFoundException;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -19,6 +21,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import mail.MailSender;
+import mail.MailType;
+import security.Hashing;
 
 /**
  *
@@ -96,11 +101,37 @@ public class UserFacadeREST extends AbstractFacade<User> {
     @Path("login/{login}")
     @Produces({MediaType.APPLICATION_XML})
     public User findUserByLogin(@PathParam("login") String login) {
-        List<User> users = em.createNamedQuery("findUserByLogin").setParameter("login", login).getResultList();
+        List<User> users = findAll(); 
         User user = null;
-        if(users.size() == 1){
-            user = users.get(0);
-        }
+        user = users.stream().filter(u -> u.getLogin().equals(login)).findFirst().get();
         return user;
+    }
+    
+    @GET
+    @Path("email/{email}")
+    @Produces({MediaType.APPLICATION_XML})
+    public User findUserByEmail(@PathParam("email") String email) {
+        List<User> users = findAll(); 
+        User user = null;
+        user = users.stream().filter(u -> u.getEmail().equals(email)).findFirst().get();
+        return user;
+    }
+    
+    @GET
+    @Path("resetPasswd/{email}")
+    @Produces({MediaType.APPLICATION_XML})
+    public User resetPassword(@PathParam("email") String email) throws EmailNotFoundException{
+        User user = findUserByEmail(email);
+        if(user != null){
+            MailSender.sendEmail(email, MailType.PASS_RESET);
+            String tempPass = MailSender.getGeneratedPasswd();
+            user.setPassword(Hashing.getSHA256SecurePassword(tempPass, Hashing.SALT));
+            //edit(user.getIdUser(), user);
+            em.merge(user);
+            em.flush();
+        }else{
+            throw new EmailNotFoundException();
+        }
+        return null;
     }
 }

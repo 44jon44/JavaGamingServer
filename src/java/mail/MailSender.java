@@ -29,13 +29,20 @@ import security.PasswordGenerator;
  * @author Alex Hurtado
  */
 public class MailSender {
+
+    private static final Logger LOG = Logger.getLogger(MailSender.class.getName());
+    
 	private static final ResourceBundle RB = ResourceBundle.getBundle("mail.mail");
 	private static final String SMTP_HOST = RB.getString("SMTP_HOST");
  	private static final String SMTP_PORT = RB.getString("SMTP_PORT");
- 	private static final String MAIL_FROM_USER = AESDecipher.decipherText(RB.getString("MAIL_USER_PATH"));
- 	private static final String MAIL_PASS = AESDecipher.decipherText(RB.getString("MAIL_PASSWD_PATH"));
+ 	private static final String MAIL_FROM_USER = AESDecipher.decipherText(RB.getString("MAIL_USER"));
+ 	private static final String MAIL_PASS = AESDecipher.decipherText(RB.getString("MAIL_PASS"));
+        private static String generatedPasswd;
+        
     //Mail properties
     public static void sendEmail(String mailTo,MailType type) {
+        LOG.info("MAIL_FROM_USER: " + MAIL_FROM_USER);
+        LOG.info("MAIL_PASS: " + MAIL_PASS);
         String genPassword = null;
         String mailSubject = null;
      	String mailMessage = null;
@@ -64,6 +71,7 @@ public class MailSender {
         	if(type.equals(MailType.PASS_RESET)) {
         		mailSubject = RB.getString("MAIL_SUBJECT_RESET");
         		genPassword = PasswordGenerator.getPassword(8); 
+                        setGeneratedPasswd(genPassword);
         		mailMessage = String.format(RB.getString("MAIL_MESSAGE_RESET"), genPassword);
         	}
         	if(type.equals(MailType.PASS_CHANGE)){
@@ -91,6 +99,12 @@ public class MailSender {
             Logger.getLogger(MailSender.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static String getGeneratedPasswd() {
+        return generatedPasswd;
+    }
 
+    public static void setGeneratedPasswd(String generatedPasswd) {
+        MailSender.generatedPasswd = generatedPasswd;
+    }
 }
-
