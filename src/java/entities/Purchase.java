@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,11 +23,22 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author ibai Arriola
+ * @author Ibai Arriola, Alex Hurtado
  */
 @Entity
 @Table(name = "purchase", schema = "g5reto2")
 @XmlRootElement
+@NamedQueries({
+    //RUD
+    @NamedQuery(name = "deletePurchase", query = "DELETE FROM Purchase p WHERE p.idPurchase = :idPurchase"
+    ),
+    @NamedQuery(name = "findPurchasesByClientId", query = "SELECT p FROM Purchase p WHERE p.client.idUser =:idUser"
+    ),
+    @NamedQuery(name = "findPurchasesByPurDate", query = "SELECT p FROM Purchase p WHERE p.purchaseDate = :purchaseDate"
+    ),
+    @NamedQuery(name = "findPurchasesByPrice", query = "SELECT p FROM Purchase p WHERE p.game.price = :price"
+     )
+})
 public class Purchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -71,7 +84,7 @@ public class Purchase implements Serializable {
         return client;
     }
 
-    @XmlTransient
+    //@XmlTransient
     public void setClient(Client client) {
         this.client = client;
     }

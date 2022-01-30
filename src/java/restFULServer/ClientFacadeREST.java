@@ -6,6 +6,8 @@
 package restFULServer;
 
 import entities.Client;
+import entities.UserPrivilege;
+import entities.UserStatus;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -82,7 +84,18 @@ public class ClientFacadeREST extends AbstractFacade<Client> {
     public String countREST() {
         return String.valueOf(super.count());
     }
-
+    
+    //Consultas personalizadas
+    @GET
+    @Path("fullName/{fullName}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Client> findGamebyPegi(@PathParam("fullName") String fullName) {
+        List<Client>  clientsByFullName = null;
+        clientsByFullName = em.createNamedQuery("findClientsByName").setParameter("fullName", fullName).setParameter("privilege", UserPrivilege
+        .CLIENT).getResultList();
+        return clientsByFullName;
+    }
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;

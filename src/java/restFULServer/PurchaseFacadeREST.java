@@ -108,6 +108,16 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
         return String.valueOf(super.count());
     }
 
+    //Consultas personalizadas
+    @GET
+    @Path("idClient/{idClient}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findGamebyPegi(@PathParam("idClient") Integer idClient) {
+        List<Purchase>  clientsByFullName = null;
+        clientsByFullName = em.createNamedQuery("findPurchasesByClientId").setParameter("idUser", idClient).getResultList();
+        return clientsByFullName;
+    }
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;

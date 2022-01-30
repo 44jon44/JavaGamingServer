@@ -14,6 +14,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,6 +28,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @DiscriminatorValue("CLIENT")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "findClientsByName", query = "SELECT u FROM User u WHERE u.fullName =:fullName AND u.privilege = :privilege"
+    ),
+    @NamedQuery(name = "findClientByLogin", query = "SELECT u FROM User u WHERE u.login =:login AND u.privilege = :privilege"
+    ),
+    @NamedQuery(name = "employeeByEmail", query = "SELECT e FROM Employee e WHERE e.email =:email "
+     )
+})
 public class Client extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
