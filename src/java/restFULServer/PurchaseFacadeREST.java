@@ -7,7 +7,12 @@ package restFULServer;
 
 import entities.IdPurchase;
 import entities.Purchase;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -110,12 +115,48 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
 
     //Consultas personalizadas
     @GET
-    @Path("idClient/{idClient}")
+    @Path("purchase/{idClient}/{idGame}")
     @Produces({MediaType.APPLICATION_XML})
-    public List<Purchase> findGamebyPegi(@PathParam("idClient") Integer idClient) {
-        List<Purchase>  clientsByFullName = null;
-        clientsByFullName = em.createNamedQuery("findPurchasesByClientId").setParameter("idUser", idClient).getResultList();
-        return clientsByFullName;
+    public List<Purchase> findPurchaseById(@PathParam("idClient") Integer idClient,@PathParam("idGame") Integer idGame) {
+        List<Purchase>  purchasesById;
+        purchasesById = em.createNamedQuery("findPurchaseById").setParameter("idClient", idClient).setParameter("idGame", idGame).getResultList();
+        return purchasesById;
+    }
+    
+    @GET
+    @Path("purchases/id/{idClient}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByClientId(@PathParam("idClient") Integer idClient) {
+        List<Purchase>  purchasesByClientId;
+        purchasesByClientId = em.createNamedQuery("findPurchasesByClientId").setParameter("idClient", idClient).getResultList();
+        return purchasesByClientId;
+    }
+    
+    @GET
+    @Path("purchases/date/{purchaseDate}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByPurchaseDate(@PathParam("purchaseDate") String purchaseDate) {
+        List<Purchase>  purchasesByPurchaseDate = null;
+        try {
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            
+            purchasesByPurchaseDate = em.createNamedQuery("findPurchasesByPurchaseDate").setParameter("purchaseDate", purDate).getResultList();
+            
+        } catch (ParseException ex) {
+            Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return purchasesByPurchaseDate;
+    }
+    
+    @GET
+    @Path("purchases/price/{price}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByPrice(@PathParam("price") Float price) {
+        List<Purchase>  purchasesByPrice;  
+        
+        purchasesByPrice = em.createNamedQuery("findPurchasesByPrice").setParameter("price", price).getResultList();
+            
+        return purchasesByPrice;
     }
     
     @Override

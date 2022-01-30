@@ -30,11 +30,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     //RUD
-    @NamedQuery(name = "deletePurchase", query = "DELETE FROM Purchase p WHERE p.idPurchase = :idPurchase"
+    @NamedQuery(name = "findPurchaseById", query = "SELECT p FROM Purchase p WHERE p.idPurchase.idClient = :idClient AND p.idPurchase.idGame = :idGame"
     ),
-    @NamedQuery(name = "findPurchasesByClientId", query = "SELECT p FROM Purchase p WHERE p.client.idUser =:idUser"
+    @NamedQuery(name = "deletePurchase", query = "DELETE FROM Purchase p WHERE p.idPurchase.idClient = :idClient AND p.idPurchase.idGame = :idGame"
     ),
-    @NamedQuery(name = "findPurchasesByPurDate", query = "SELECT p FROM Purchase p WHERE p.purchaseDate = :purchaseDate"
+    @NamedQuery(name = "findPurchasesByClientId", query = "SELECT p FROM Purchase p WHERE p.idPurchase.idClient =:idClient"
+    ),
+    @NamedQuery(name = "findPurchasesByPurchaseDate", query = "SELECT p FROM Purchase p WHERE p.purchaseDate = :purchaseDate"
     ),
     @NamedQuery(name = "findPurchasesByPrice", query = "SELECT p FROM Purchase p WHERE p.game.price = :price"
      )
@@ -84,7 +86,7 @@ public class Purchase implements Serializable {
         return client;
     }
 
-    //@XmlTransient
+    @XmlTransient
     public void setClient(Client client) {
         this.client = client;
     }
