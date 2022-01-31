@@ -60,7 +60,7 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
     public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
     }
-
+    
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML})
@@ -112,7 +112,7 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
     @GET
     @Path("salary/{salary}")
     @Produces({MediaType.APPLICATION_XML})
-    public List<Employee> employeeBySalary(@PathParam("salary") Float salary) {
+    public List<Employee> employeeBySalary(@PathParam("salary") String salary) {
         List<Employee> orderEmployeeBySalary = null;
         try {
             LOGGER.info("Orden por salario");
@@ -121,7 +121,7 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
                     
                     .getResultList();
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error al ordenar empleados por salario{0}", ex.getLocalizedMessage());
+            LOGGER.log(Level.SEVERE, "Error al buscar empleados por salario{0}", ex.getLocalizedMessage());
             throw new AbstractMethodError();
         }
         return orderEmployeeBySalary;

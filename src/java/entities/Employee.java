@@ -48,7 +48,7 @@ public class Employee extends User implements Serializable {
     /**
      * Salario que recibe el empleado
      */
-    private Float salary;
+    private String salary;
     @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "game_employee")
     private Set<Game> games;
@@ -76,7 +76,7 @@ public class Employee extends User implements Serializable {
      *
      * @return hiringDate
      */
-    public Float getSalary() {
+    public String getSalary() {
         return salary;
     }
 
@@ -85,7 +85,7 @@ public class Employee extends User implements Serializable {
      *
      * @param salary
      */
-    public void setSalary(Float salary) {
+    public void setSalary(String salary) {
         this.salary = salary;
     }
 

@@ -11,7 +11,7 @@ package security;
  */
 public class SecurityTest {
     public static void main(String[] args){
-        String pass = "Password";
+        String pass = "abcd*1234";
         String hashPass = Hashing.getSHA256SecurePassword(pass, Hashing.SALT);
         System.out.println(hashPass);
     }
