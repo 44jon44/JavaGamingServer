@@ -196,6 +196,8 @@ public class UserFacadeREST extends AbstractFacade<User> {
             System.out.println(hashedPassword);
 
             users = em.createNamedQuery("checkLogin").setParameter("login", login).setParameter("password", hashedPassword).getResultList();
+            //no se devuelve la contraseña del usuario al lado cliente
+            users.get(0).setPassword("");
             //Take all the last signins of a user to the persistance context
             //SELECT l FROM LastSignIn l WHERE l.user =(SELECT u FROM User u WHERE u.login= :login) ORDER BY l.lastSignIn ASC 
             /*List<LastSignIn> lastSignIns = new ArrayList<>();
