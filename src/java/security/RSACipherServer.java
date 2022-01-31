@@ -5,7 +5,6 @@
  */
 package security;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -31,7 +30,7 @@ import javax.crypto.NoSuchPaddingException;
  * que le llega al servidor y que sale del mismo.
  * @author Alex Hurtado , Ibai Arriola
  */
-public class RSACipher {
+public class RSACipherServer {
     //Logger para la clase en encriptacion.
     private static final Logger LOG = Logger.getLogger(RSACipher.class.getName());
     //ResourceBundle para obtener el nombre del fichero que contiene la clave
@@ -97,7 +96,7 @@ public class RSACipher {
             // Leemos la clave publica del archivo en el cual lo hemos escrito
             //key = readPrivateKey("./src/java/security/RSAPrivate.key");
             LOG.info(Paths.get(RSACipher.class.getResource(filePvtKey).toURI()).toString());
-            key = readPrivateKey(Paths.get(RSACipher.class.getResource(filePvtKey).toURI()).toString());
+            key = readPrivateKey(Paths.get(RSACipherServer.class.getResource(filePvtKey).toURI()).toString());
             // Obtenemos una instancide de Cipher con el algoritmos que vamos a usar "RSA/ECB/OAEPWithSHA1AndMGF1Padding"
             cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
             // Iniciamos el Cipher en DECRYPT_MODE y le pasamos la clave privada
