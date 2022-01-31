@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -34,11 +35,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "user", schema = "g5reto2")
-@DiscriminatorColumn(name = "privilege")
+@DiscriminatorValue("ADMIN")
+@DiscriminatorColumn(name="privilege")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "checkLogin", query = "SELECT u FROM User u WHERE u.login =:login AND u.password =:password "
-    )})
+    @NamedQuery(name = "findUserByLogin",
+            query = "SELECT u FROM User u WHERE u.login = :login"),
+    @NamedQuery(name = "findUserByEmail",
+            query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "checkLogin", query = "SELECT u FROM User u WHERE u.login =:login AND u.password =:password")
+})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

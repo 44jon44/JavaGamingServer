@@ -21,7 +21,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.shape.Path;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -140,8 +139,7 @@ public class RSACipher {
     public static PublicKey readPublicKey(String filePath) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(fileReader(filePath));
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PublicKey key =  keyFactory.generatePublic(publicSpec);
-        return key;
+        return keyFactory.generatePublic(publicSpec);
     }
 
     /**

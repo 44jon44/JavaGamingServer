@@ -12,6 +12,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 /**
 * Esta clase permite descifrar un texto, que se ha cifrado previamente con una <b>clave secreta</b>, que está
@@ -37,13 +38,56 @@ public class AESDecipher {
      * Descifra un texto con AES, modo CBC y padding PKCS5Padding (simétrica) y
      * lo retorna
      *
-     * @param clave La clave del usuario
+     * @param encrtypted  La clave del usuario
+     * @return 
      */
-    public static String decipherText(String filePath) {
+//    public static String decipherText(String filePath) {
+//    	
+//        String decodedText = null;
+//        // Leemos el contenido del fichero
+//        byte[] fileContent = fileReader(filePath); 
+//        KeySpec keySpec = null;
+//        SecretKeyFactory secretKeyFactory = null;
+//        try
+//        {
+//            // Obtenemos el keySpec
+//            keySpec = new PBEKeySpec(PASS.toCharArray(), SALT, 65536, 128); // AES-128
+//
+//            // Obtenemos una instancide de SecretKeyFactory con el algoritmo "PBKDF2WithHmacSHA1"
+//            secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+//            
+//            // Generamos la clave
+//            byte[] key = secretKeyFactory.generateSecret(keySpec).getEncoded();
+//
+//            // Creamos un SecretKey usando la clave + salt
+//            SecretKey privateKey = new SecretKeySpec(key, 0, key.length, "AES");
+//            
+//            // Obtenemos una instancide de Cipher con el algoritmos que vamos a usar "AES/CBC/PKCS5Padding"
+//            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+//
+//            // Leemos el fichero codificado 
+//            IvParameterSpec ivParam = new IvParameterSpec(Arrays.copyOfRange(fileContent, 0, 16));
+//
+//            // Iniciamos el Cipher en DECRYPT_MODE y le pasamos la clave privada y el ivParam
+//            cipher.init(Cipher.DECRYPT_MODE, privateKey, ivParam);
+//            // Le decimos que descifre
+//            byte[] decodedBytes = cipher.doFinal(Arrays.copyOfRange(fileContent, 16, fileContent.length));
+//
+//            // Texto descifrado
+//            decodedText = new String(decodedBytes);
+//
+//        } catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return decodedText;
+//    }
+    
+    public static String decipherText(String encrtypted) {
     	
         String decodedText = null;
         // Leemos el contenido del fichero
-        byte[] fileContent = fileReader(filePath); 
+        byte[] fileContent = DatatypeConverter.parseHexBinary(encrtypted);
         KeySpec keySpec = null;
         SecretKeyFactory secretKeyFactory = null;
         try
@@ -69,8 +113,8 @@ public class AESDecipher {
             // Iniciamos el Cipher en DECRYPT_MODE y le pasamos la clave privada y el ivParam
             cipher.init(Cipher.DECRYPT_MODE, privateKey, ivParam);
             // Le decimos que descifre
+            //byte[] decodedBytes = cipher.doFinal(Arrays.copyOfRange(fileContent, 16, fileContent.length));
             byte[] decodedBytes = cipher.doFinal(Arrays.copyOfRange(fileContent, 16, fileContent.length));
-
             // Texto descifrado
             decodedText = new String(decodedBytes);
 
@@ -80,7 +124,7 @@ public class AESDecipher {
         }
         return decodedText;
     }
-
+    
     /**
      * Retorna el contenido de un fichero
      *
@@ -100,14 +144,14 @@ public class AESDecipher {
         return ret;
     }
 
-    public static void main(String[] args) {
-       
-        String filePath = "./src/mail/mailUser.dat";
-        //System.out.println("Cifrado! -> " + mensajeCifrado);
-        System.out.println("-----------");
-        System.out.println("Descifrado! -> " + AESDecipher.decipherText(filePath));
-        System.out.println("-----------");
-        filePath = "./src/mail/mailPasswd.dat";
-        System.out.println("Descifrado! -> " + AESDecipher.decipherText(filePath));
-    }
+//    public static void main(String[] args) {
+//       
+//        String filePath = "./src/mail/mailUser.dat";
+//        //System.out.println("Cifrado! -> " + mensajeCifrado);
+//        System.out.println("-----------");
+//        System.out.println("Descifrado! -> " + AESDecipher.decipherText(filePath));
+//        System.out.println("-----------");
+//        filePath = "./src/mail/mailPasswd.dat";
+//        System.out.println("Descifrado! -> " + AESDecipher.decipherText(filePath));
+//    }
 }

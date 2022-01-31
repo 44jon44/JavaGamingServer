@@ -5,7 +5,13 @@
  */
 package restFULServer;
 
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import entities.User;
+import entities.UserPrivilege;
+import exception.EmailNotFoundException;
+import exception.WrongPasswordException;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,8 +30,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.DatatypeConverter;
+import mail.MailSender;
+import mail.MailType;
 import security.Hashing;
+import security.RSACipher;
 import security.RSACipherServer;
+
 
 /**
  *
@@ -36,6 +46,7 @@ import security.RSACipherServer;
 public class UserFacadeREST extends AbstractFacade<User> {
 
     private static final Logger LOGGER = Logger.getLogger(UserFacadeREST.class.getName());
+
     @PersistenceContext(unitName = "JavaGamingServerPU")
     private EntityManager em;
 
@@ -100,6 +111,73 @@ public class UserFacadeREST extends AbstractFacade<User> {
     protected EntityManager getEntityManager() {
         return em;
     }
+    
+    @GET
+    @Path("login/{login}")
+    @Produces({MediaType.APPLICATION_XML})
+    public User findUserByLogin(@PathParam("login") String login) {
+        List<User> users = findAll(); 
+        User user = null;
+        user = users.stream().filter(u -> u.getLogin().equals(login)).findFirst().get();
+        return user;
+    }
+    
+    @GET
+    @Path("email/{email}")
+    @Produces({MediaType.APPLICATION_XML})
+    public User findUserByEmail(@PathParam("email") String email) throws EmailNotFoundException {
+        List<User> users = findAll(); 
+        User user = users.stream().filter(u -> u.getEmail().equals(email)).findFirst().get();
+        if(user != null)
+            return user;
+        else
+           throw new EmailNotFoundException();
+    }
+    
+    @GET
+    @Path("resetPasswd/{email}")
+    @Produces({MediaType.APPLICATION_XML})
+    public User resetPassword(@PathParam("email") String email) throws EmailNotFoundException{
+        User user = findUserByEmail(email);
+        LOG.info(user.toString());
+        MailSender.sendEmail(email, MailType.PASS_RESET);
+        String tempPass = MailSender.getGeneratedPasswd();
+        user.setPassword(Hashing.getSHA256SecurePassword(tempPass, Hashing.SALT));
+        //edit(user.getIdUser(), user);
+        em.merge(user);
+        em.flush();
+        return null;
+    }
+    
+    @GET
+    @Path("changePasswd/{email}/{oldPass}/{newPass}")
+    @Produces({MediaType.APPLICATION_XML})
+    public User changePassword(@PathParam("email") String email, @PathParam("oldPass") String oldPass, @PathParam("newPass") String newPass) throws WrongPasswordException, EmailNotFoundException{
+        User user = findUserByEmail(email);
+        if(user != null){
+            //la contraseña antigua y la nueva llegan cifradas de forma asimétrica desde el cliente
+            //primero desencriptamos las contraseñas antigua y nueva con la clave privada del servidor
+            String oldPassStr = new String(RSACipher.decrypt(DatatypeConverter.parseHexBinary(oldPass)));
+            String newPassStr = new String(RSACipher.decrypt(DatatypeConverter.parseHexBinary(newPass)));
+            //Hasheamos la vieja contraseña del usuario y luego la comparamos con la recuperamos de user
+            String oldPassHash = Hashing.getSHA256SecurePassword(oldPassStr, Hashing.SALT);
+            if(oldPassHash.equals(user.getPassword())){
+                //si la contraseña vieja y la que está almacenada en la BBDD son las mismas actualizamos la contraseña
+                user.setPassword(Hashing.getSHA256SecurePassword(newPassStr, Hashing.SALT));
+                //actualizamos la fecha en la que se ha cambiado la contraseña
+                user.setLastPasswordChange(Date.from(Instant.now()));
+                //edit(user.getIdUser(), user);
+                em.merge(user);
+                em.flush();
+                //informamos al usuario de que ha cambiado su contraseña
+                MailSender.sendEmail(email, MailType.PASS_CHANGE);
+            }else{
+                //si no coinciden las contraseñas lanzamos una excepción para informar al usuario
+                throw new WrongPasswordException();
+            }
+        }
+        return null;
+    }
 
     @GET
     @Path("login/{login}/password/{password}")
@@ -109,14 +187,11 @@ public class UserFacadeREST extends AbstractFacade<User> {
         try {
             LOGGER.info("Getting the login information");
             //Decipher pasword
-            
-            //byte[] cipherByte = DatatypeConverter.parseHexBinary("C2543B53ED3208E4C3EB42D62D52D4954A900EFA7DAAD280BF58CC18566AD96C3DF9775C6B2F67C42E5BBF3EB9C5626C8962E0BB2E0E6F319F89B3CADF9899D51BD42CD27870267134DDB5E81CFDA28BBAA0E69085E475555B1E0CDF07CFCC684B09F5A4E83B6951C99828709196A945A81BEA1ADAD42B8BD744250A15C7BDEF0E32A5B32F93380C383379B030B29124726A2FE4C1879AA6D9647AE7972D3982E1EAEF517CC7D3BCC9712C2512C69766BE8120DE1B5743B888D4B9FE1CBAB3D2A12D1BD495D5B9E0F23F2FEC953072CA07CA9B94BAF5D3CDE3FC58E040E2DD0390C5173065C78AAE711AB937ED1CDD95AD9928A1CE62F7811C71B85C6764770F");
-            
+          
             byte[] cipherByte=DatatypeConverter.parseHexBinary(password);
             
             byte[] decipheredPassword = RSACipherServer.decrypt(cipherByte);
-            
-            
+          
             //Hash password       
             String hashedPassword = Hashing.getSHA256SecurePassword(new String(decipheredPassword), Hashing.SALT);
             System.out.println(hashedPassword);
@@ -151,5 +226,4 @@ public class UserFacadeREST extends AbstractFacade<User> {
         }
         return users;
     }
-
 }
