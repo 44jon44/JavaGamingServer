@@ -18,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,12 +31,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Alex Hurtado
  */
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "user", schema = "g5reto2")
-@DiscriminatorColumn(name="privilege")
+@DiscriminatorColumn(name = "privilege")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "checkLogin", query = "SELECT u FROM User u WHERE u.login =:login AND u.password =:password "
+    )})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -70,7 +74,7 @@ public class User implements Serializable {
      * Privilegio del usuario.
      */
     @NotNull
-    @Column(insertable = false,updatable = false)
+    @Column(insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private UserPrivilege privilege;
 
@@ -84,10 +88,11 @@ public class User implements Serializable {
      */
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastPasswordChange;
-/**
- * 
- * Metodos getter y setter
- */
+
+    /**
+     *
+     * Metodos getter y setter
+     */
     public Integer getIdUser() {
         return idUser;
     }
