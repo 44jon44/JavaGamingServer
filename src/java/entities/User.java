@@ -32,19 +32,19 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Alex Hurtado
  */
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "user", schema = "g5reto2")
 @DiscriminatorValue("ADMIN")
 @DiscriminatorColumn(name="privilege")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "findUserByLogin",
             query = "SELECT u FROM User u WHERE u.login = :login"),
     @NamedQuery(name = "findUserByEmail",
-            query = "SELECT u FROM User u WHERE u.email = :email")
+            query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "checkLogin", query = "SELECT u FROM User u WHERE u.login =:login AND u.password =:password")
 })
-@XmlRootElement
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -80,7 +80,7 @@ public class User implements Serializable {
      * Privilegio del usuario.
      */
     @NotNull
-    @Column(insertable = false,updatable = false)
+    @Column(insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private UserPrivilege privilege;
 
@@ -94,10 +94,11 @@ public class User implements Serializable {
      */
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastPasswordChange;
-/**
- * 
- * Metodos getter y setter
- */
+
+    /**
+     *
+     * Metodos getter y setter
+     */
     public Integer getIdUser() {
         return idUser;
     }

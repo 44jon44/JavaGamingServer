@@ -17,10 +17,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -32,6 +34,8 @@ import mail.MailSender;
 import mail.MailType;
 import security.Hashing;
 import security.RSACipher;
+import security.RSACipherServer;
+
 
 /**
  *
@@ -41,8 +45,8 @@ import security.RSACipher;
 @Path("user")
 public class UserFacadeREST extends AbstractFacade<User> {
 
-    private static final Logger LOG = Logger.getLogger(UserFacadeREST.class.getName());
-    
+    private static final Logger LOGGER = Logger.getLogger(UserFacadeREST.class.getName());
+
     @PersistenceContext(unitName = "JavaGamingServerPU")
     private EntityManager em;
 
@@ -69,11 +73,12 @@ public class UserFacadeREST extends AbstractFacade<User> {
     public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
     }
-/**
- * 
- * @param id
- * @return 
- */
+
+    /**
+     *
+     * @param id
+     * @return
+     */
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML})
@@ -172,5 +177,53 @@ public class UserFacadeREST extends AbstractFacade<User> {
             }
         }
         return null;
+    }
+
+    @GET
+    @Path("login/{login}/password/{password}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<User> checkLogin(@PathParam("login") String login, @PathParam("password") String password) {
+        List<User> users = null;
+        try {
+            LOGGER.info("Getting the login information");
+            //Decipher pasword
+          
+            byte[] cipherByte=DatatypeConverter.parseHexBinary(password);
+            
+            byte[] decipheredPassword = RSACipherServer.decrypt(cipherByte);
+          
+            //Hash password       
+            String hashedPassword = Hashing.getSHA256SecurePassword(new String(decipheredPassword), Hashing.SALT);
+            System.out.println(hashedPassword);
+
+            users = em.createNamedQuery("checkLogin").setParameter("login", login).setParameter("password", hashedPassword).getResultList();
+            //Take all the last signins of a user to the persistance context
+            //SELECT l FROM LastSignIn l WHERE l.user =(SELECT u FROM User u WHERE u.login= :login) ORDER BY l.lastSignIn ASC 
+            /*List<LastSignIn> lastSignIns = new ArrayList<>();
+            lastSignIns = (ArrayList) em.createNamedQuery("findByUserLogin").setParameter("user", user).getResultList();
+
+            //If they signed in less than 10 times, a new sign in is added
+            if (lastSignIns.size() < 10) {
+                LastSignIn lastSignIn = new LastSignIn();
+                lastSignIn.setId(null);
+                lastSignIn.setLastSignIn(new Date());
+                lastSignIn.setUser(user);
+                em.persist(lastSignIn);
+            } else {
+                //If they signed in more than 10 times, the sign in with the minimum date is updated
+                LastSignIn lis = lastSignIns.get(0);
+                lis.setLastSignIn(new Date());
+                em.merge(lis);
+            }*/
+
+        } catch (NoResultException e) {
+            LOGGER.log(Level.SEVERE, "UserEJB --> login():{0}", e.getLocalizedMessage());
+            throw new NotAuthorizedException(e);
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "UserEJB --> login():{0}", e.getLocalizedMessage());
+            //Throw new read exception
+        }
+        return users;
     }
 }

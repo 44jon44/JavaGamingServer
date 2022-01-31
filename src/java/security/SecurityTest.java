@@ -14,6 +14,7 @@ import javax.xml.datatype.DatatypeConstants;
  */
 public class SecurityTest {
     public static void main(String[] args){
+
         String oldPass = "abcd*1234";
         String newPass = "Abcd*1234";
         System.out.println(Hashing.getSHA256SecurePassword(oldPass, Hashing.SALT));
@@ -37,5 +38,9 @@ public class SecurityTest {
         System.out.println(new String(textDecrypted));
         textDecrypted = RSACipher.decrypt(encryptedNewPass);
         System.out.println(new String(textDecrypted));
+      
+        String pass = "abcd*1234";
+        String hashPass = Hashing.getSHA256SecurePassword(pass, Hashing.SALT);
+        System.out.println(hashPass);
     }
 }
