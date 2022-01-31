@@ -29,11 +29,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @DiscriminatorValue("CLIENT")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "findClientsByName", query = "SELECT u FROM User u WHERE u.fullName =:fullName AND u.privilege = :privilege"
+    @NamedQuery(name = "findClientById", query = "SELECT u FROM User u WHERE u.idUser =:idClient AND u.privilege = :privilege"
+    ),
+    @NamedQuery(name = "findClientByFullName", query = "SELECT u FROM User u WHERE u.fullName =:fullName AND u.privilege = :privilege"
     ),
     @NamedQuery(name = "findClientByLogin", query = "SELECT u FROM User u WHERE u.login =:login AND u.privilege = :privilege"
     ),
-    @NamedQuery(name = "employeeByEmail", query = "SELECT e FROM Employee e WHERE e.email =:email "
+    @NamedQuery(name = "findClientByEmail", query = "SELECT u FROM User u WHERE u.email =:email AND u.privilege = :privilege"
      )
 })
 public class Client extends User implements Serializable {

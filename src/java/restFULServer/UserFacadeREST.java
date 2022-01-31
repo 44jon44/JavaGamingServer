@@ -139,7 +139,7 @@ public class UserFacadeREST extends AbstractFacade<User> {
     @Produces({MediaType.APPLICATION_XML})
     public User resetPassword(@PathParam("email") String email) throws EmailNotFoundException{
         User user = findUserByEmail(email);
-        LOG.info(user.toString());
+        LOGGER.info(user.toString());
         MailSender.sendEmail(email, MailType.PASS_RESET);
         String tempPass = MailSender.getGeneratedPasswd();
         user.setPassword(Hashing.getSHA256SecurePassword(tempPass, Hashing.SALT));
