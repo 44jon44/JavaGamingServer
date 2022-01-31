@@ -10,6 +10,8 @@ import entities.User;
 import entities.UserPrivilege;
 import exception.EmailNotFoundException;
 import exception.WrongPasswordException;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +31,7 @@ import javax.xml.bind.DatatypeConverter;
 import mail.MailSender;
 import mail.MailType;
 import security.Hashing;
+import security.RSACipher;
 
 /**
  *
@@ -117,11 +120,13 @@ public class UserFacadeREST extends AbstractFacade<User> {
     @GET
     @Path("email/{email}")
     @Produces({MediaType.APPLICATION_XML})
-    public User findUserByEmail(@PathParam("email") String email) {
+    public User findUserByEmail(@PathParam("email") String email) throws EmailNotFoundException {
         List<User> users = findAll(); 
-        User user = null;
-        user = users.stream().filter(u -> u.getEmail().equals(email)).findFirst().get();
-        return user;
+        User user = users.stream().filter(u -> u.getEmail().equals(email)).findFirst().get();
+        if(user != null)
+            return user;
+        else
+           throw new EmailNotFoundException();
     }
     
     @GET
@@ -129,35 +134,38 @@ public class UserFacadeREST extends AbstractFacade<User> {
     @Produces({MediaType.APPLICATION_XML})
     public User resetPassword(@PathParam("email") String email) throws EmailNotFoundException{
         User user = findUserByEmail(email);
-        if(user != null){
-            MailSender.sendEmail(email, MailType.PASS_RESET);
-            String tempPass = MailSender.getGeneratedPasswd();
-            user.setPassword(Hashing.getSHA256SecurePassword(tempPass, Hashing.SALT));
-            //edit(user.getIdUser(), user);
-            em.merge(user);
-            em.flush();
-        }else{
-            throw new EmailNotFoundException();
-        }
+        LOG.info(user.toString());
+        MailSender.sendEmail(email, MailType.PASS_RESET);
+        String tempPass = MailSender.getGeneratedPasswd();
+        user.setPassword(Hashing.getSHA256SecurePassword(tempPass, Hashing.SALT));
+        //edit(user.getIdUser(), user);
+        em.merge(user);
+        em.flush();
         return null;
     }
     
     @GET
     @Path("changePasswd/{email}/{oldPass}/{newPass}")
     @Produces({MediaType.APPLICATION_XML})
-    public User changePassword(@PathParam("email") String email, @PathParam("oldPass") String oldPass, @PathParam("newPass") String newPass) throws WrongPasswordException{
+    public User changePassword(@PathParam("email") String email, @PathParam("oldPass") String oldPass, @PathParam("newPass") String newPass) throws WrongPasswordException, EmailNotFoundException{
         User user = findUserByEmail(email);
         if(user != null){
+            //la contraseña antigua y la nueva llegan cifradas de forma asimétrica desde el cliente
+            //primero desencriptamos las contraseñas antigua y nueva con la clave privada del servidor
+            String oldPassStr = new String(RSACipher.decrypt(DatatypeConverter.parseHexBinary(oldPass)));
+            String newPassStr = new String(RSACipher.decrypt(DatatypeConverter.parseHexBinary(newPass)));
             //Hasheamos la vieja contraseña del usuario y luego la comparamos con la recuperamos de user
-            String oldPassStr = new String(DatatypeConverter.parseHexBinary(oldPass));
-            String newPassStr = new String(DatatypeConverter.parseHexBinary(newPass));
             String oldPassHash = Hashing.getSHA256SecurePassword(oldPassStr, Hashing.SALT);
             if(oldPassHash.equals(user.getPassword())){
                 //si la contraseña vieja y la que está almacenada en la BBDD son las mismas actualizamos la contraseña
                 user.setPassword(Hashing.getSHA256SecurePassword(newPassStr, Hashing.SALT));
+                //actualizamos la fecha en la que se ha cambiado la contraseña
+                user.setLastPasswordChange(Date.from(Instant.now()));
                 //edit(user.getIdUser(), user);
                 em.merge(user);
                 em.flush();
+                //informamos al usuario de que ha cambiado su contraseña
+                MailSender.sendEmail(email, MailType.PASS_CHANGE);
             }else{
                 //si no coinciden las contraseñas lanzamos una excepción para informar al usuario
                 throw new WrongPasswordException();
