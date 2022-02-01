@@ -183,6 +183,7 @@ public class UserFacadeREST extends AbstractFacade<User> {
     @Produces({MediaType.APPLICATION_XML})
     public List<User> checkLogin(@PathParam("login") String login, @PathParam("password") String password) {
         List<User> users = null;
+        List<User> usersRet=null;
         try {
             LOGGER.info("Getting the login information");
             //Decipher pasword
@@ -196,8 +197,7 @@ public class UserFacadeREST extends AbstractFacade<User> {
             System.out.println(hashedPassword);
 
             users = em.createNamedQuery("checkLogin").setParameter("login", login).setParameter("password", hashedPassword).getResultList();
-            //no se devuelve la contraseña del usuario al lado cliente
-            users.get(0).setPassword("");
+
             //Take all the last signins of a user to the persistance context
             //SELECT l FROM LastSignIn l WHERE l.user =(SELECT u FROM User u WHERE u.login= :login) ORDER BY l.lastSignIn ASC 
             /*List<LastSignIn> lastSignIns = new ArrayList<>();
@@ -225,6 +225,7 @@ public class UserFacadeREST extends AbstractFacade<User> {
             LOGGER.log(Level.SEVERE, "UserEJB --> login():{0}", e.getLocalizedMessage());
             //Throw new read exception
         }
+        
         return users;
     }
 }
