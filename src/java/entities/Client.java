@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * entidad cliente  que es extiende de la entidad user
@@ -63,7 +64,8 @@ public class Client extends User implements Serializable {
     public void setSignUpDate(Date signUpDate) {
         this.signUpDate = signUpDate;
     }
-
+    
+    @XmlTransient
     public Set<Purchase> getPurchases() {
         return purchases;
     }

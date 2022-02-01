@@ -86,7 +86,6 @@ public class Purchase implements Serializable {
         return client;
     }
 
-    @XmlTransient
     public void setClient(Client client) {
         this.client = client;
     }
