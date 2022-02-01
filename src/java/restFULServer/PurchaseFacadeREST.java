@@ -115,16 +115,16 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
 
     //Consultas personalizadas
     @GET
-    @Path("purchase/{idClient}/{idGame}")
+    @Path("find/id/{idClient}/{idGame}")
     @Produces({MediaType.APPLICATION_XML})
-    public List<Purchase> findPurchaseById(@PathParam("idClient") Integer idClient,@PathParam("idGame") Integer idGame) {
-        List<Purchase>  purchasesById;
-        purchasesById = em.createNamedQuery("findPurchaseById").setParameter("idClient", idClient).setParameter("idGame", idGame).getResultList();
-        return purchasesById;
+    public Purchase findPurchaseById(@PathParam("idClient") Integer idClient,@PathParam("idGame") Integer idGame) {
+        Purchase purchaseById;
+        purchaseById = (Purchase) em.createNamedQuery("findPurchaseById").setParameter("idClient", idClient).setParameter("idGame", idGame).getResultList().get(0);
+        return purchaseById;
     }
     
     @GET
-    @Path("purchases/id/{idClient}")
+    @Path("find/idClient/{idClient}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Purchase> findPurchasesByClientId(@PathParam("idClient") Integer idClient) {
         List<Purchase>  purchasesByClientId;
@@ -133,7 +133,7 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     }
     
     @GET
-    @Path("purchases/date/{purchaseDate}")
+    @Path("find/date/{purchaseDate}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Purchase> findPurchasesByPurchaseDate(@PathParam("purchaseDate") String purchaseDate) {
         List<Purchase>  purchasesByPurchaseDate = null;
@@ -149,7 +149,7 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     }
     
     @GET
-    @Path("purchases/price/{price}")
+    @Path("find/price/{price}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Purchase> findPurchasesByPrice(@PathParam("price") Float price) {
         List<Purchase>  purchasesByPrice;  
@@ -157,6 +157,13 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
         purchasesByPrice = em.createNamedQuery("findPurchasesByPrice").setParameter("price", price).getResultList();
             
         return purchasesByPrice;
+    }
+    
+    @GET
+    @Path("deletePurchase/{idClient}/{idGame}")
+    public void deletePurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame") Integer idGame) {
+        IdPurchase idPurchase = new IdPurchase(idClient, idGame);
+        em.createNamedQuery("deletePurchase").setParameter("idPurchase", idPurchase).executeUpdate();
     }
     
     @Override

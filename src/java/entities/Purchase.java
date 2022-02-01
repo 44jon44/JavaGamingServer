@@ -32,7 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
     //RUD
     @NamedQuery(name = "findPurchaseById", query = "SELECT p FROM Purchase p WHERE p.idPurchase.idClient = :idClient AND p.idPurchase.idGame = :idGame"
     ),
-    @NamedQuery(name = "deletePurchase", query = "DELETE FROM Purchase p WHERE p.idPurchase.idClient = :idClient AND p.idPurchase.idGame = :idGame"
+    //@NamedQuery(name = "deletePurchase", query = "DELETE FROM Purchase p WHERE p.idPurchase.idClient = :idClient AND p.idPurchase.idGame = :idGame"
+    @NamedQuery(name = "deletePurchase", query = "DELETE FROM Purchase p WHERE p = :purchase"
     ),
     @NamedQuery(name = "findPurchasesByClientId", query = "SELECT p FROM Purchase p WHERE p.idPurchase.idClient =:idClient"
     ),

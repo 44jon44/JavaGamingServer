@@ -23,6 +23,13 @@ public class IdPurchase implements Serializable {
     private Integer idGame;
     // la id de de un  cliente
     private Integer idClient;
+
+    public IdPurchase() {}
+    
+    public IdPurchase(Integer idClient, Integer idGame) {
+        this.idClient = idClient;
+        this.idGame = idGame;
+    }
     //getter y setter
     public Integer getIdGame() {
         return idGame;
