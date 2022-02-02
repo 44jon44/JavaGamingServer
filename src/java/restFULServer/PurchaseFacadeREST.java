@@ -35,6 +35,8 @@ import javax.ws.rs.core.PathSegment;
 @Path("purchase")
 public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
 
+    private static final Logger LOG = Logger.getLogger(PurchaseFacadeREST.class.getName());
+    
     @PersistenceContext(unitName = "JavaGamingServerPU")
     private EntityManager em;
 
@@ -159,11 +161,11 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
         return purchasesByPrice;
     }
     
-    @GET
+    @DELETE
     @Path("deletePurchase/{idClient}/{idGame}")
     public void deletePurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame") Integer idGame) {
-        IdPurchase idPurchase = new IdPurchase(idClient, idGame);
-        em.createNamedQuery("deletePurchase").setParameter("idPurchase", idPurchase).executeUpdate();
+        LOG.info("Borrando compra...");
+        em.createNamedQuery("deletePurchase").setParameter("idClient", idClient).setParameter("idGame", idGame).executeUpdate();
     }
     
     @Override

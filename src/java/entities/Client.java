@@ -21,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.Cascade;
 
 /**
  * entidad cliente  que es extiende de la entidad user
@@ -45,18 +46,20 @@ public class Client extends User implements Serializable {
     /**
      * Fecha en la que se ha dado de alta el cliente.
      */
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date signUpDate;
 
     /**
      * lista de compras reliazada por el cliente
      */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     @JoinTable(schema = "g5reto2", name = "client_purchase")
     private Set<Purchase> purchases;
 
     
     //getters y setters de la entidad cliente//
+    @XmlTransient
     public Date getSignUpDate() {
         return signUpDate;
     }

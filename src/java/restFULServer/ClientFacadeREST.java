@@ -9,6 +9,7 @@ import entities.Client;
 import entities.UserPrivilege;
 import entities.UserStatus;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +30,8 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 @Path("client")
 public class ClientFacadeREST extends AbstractFacade<Client> {
+
+    private static final Logger LOG = Logger.getLogger(ClientFacadeREST.class.getName());
 
     @PersistenceContext(unitName = "JavaGamingServerPU")
     private EntityManager em;
@@ -68,6 +71,7 @@ public class ClientFacadeREST extends AbstractFacade<Client> {
     @Override
     @Produces({MediaType.APPLICATION_XML})
     public List<Client> findAll() {
+        LOG.info("Cargando clientes");
         return super.findAll();
     }
 

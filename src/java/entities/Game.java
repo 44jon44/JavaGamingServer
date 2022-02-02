@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import static javax.persistence.FetchType.EAGER;
+import static org.hibernate.annotations.CascadeType.DELETE;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.Cascade;
 
 /**
  * Java bean de la entidad Game.
@@ -82,7 +84,8 @@ public class Game implements Serializable {
     @JoinTable(schema = "g5reto2", name = "game_employee")
     private Set<Employee> employees;
     //lista de juegos comprados
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     @JoinTable(schema = "g5reto2", name = "game_purchase")
     private Set<Purchase> purchases;
 

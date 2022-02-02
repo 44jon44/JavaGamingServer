@@ -147,11 +147,11 @@ public class User implements Serializable {
     public void setPrivilege(UserPrivilege privilege) {
         this.privilege = privilege;
     }
-
+    @XmlTransient
     public String getPassword() {
         return password;
     }
-    @XmlTransient
+    
     public void setPassword(String password) {
         this.password = password;
     }
@@ -159,7 +159,7 @@ public class User implements Serializable {
     public Date getLastPasswordChange() {
         return lastPasswordChange;
     }
-
+    @XmlTransient
     public void setLastPasswordChange(Date lastPasswordChange) {
         this.lastPasswordChange = lastPasswordChange;
     }
