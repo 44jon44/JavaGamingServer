@@ -165,8 +165,30 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     @Path("deletePurchase/{idClient}/{idGame}")
     public void deletePurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame") Integer idGame) {
         LOG.info("Borrando compra...");
+        //por las claves foraneas primero debemos borrar las entradas en las tablas client_purchase y game_purchase
+        String deleteClientPurchase = String.format("DELETE FROM g5reto2.client_purchase WHERE purchases_client_idUser = %d AND purchases_game_idGame = %d",idClient,idGame);
+        em.createNativeQuery(deleteClientPurchase).executeUpdate();
+        String deleteGamePurchase = String.format("DELETE FROM g5reto2.game_purchase WHERE purchases_client_idUser = %d AND purchases_game_idGame = %d",idClient,idGame);
+        em.createNativeQuery(deleteGamePurchase).executeUpdate();
         em.createNamedQuery("deletePurchase").setParameter("idClient", idClient).setParameter("idGame", idGame).executeUpdate();
     }
+    
+    @GET
+    @Path("updatePurchase/{idClient}/{idGame}/{purchaseDate}")
+    public Purchase updatePurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame")Integer idGame,@PathParam("purchaseDate") String purchaseDate){
+        Purchase purchase = null;
+        try {
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            purchase = findPurchaseById(idClient, idGame);
+            purchase.setPurchaseDate(purDate);
+            em.merge(purchase);
+            em.flush();
+        } catch (ParseException ex) {
+            Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return purchase;
+    }
+    
     
     @Override
     protected EntityManager getEntityManager() {
