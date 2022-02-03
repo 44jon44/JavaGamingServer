@@ -52,14 +52,12 @@ public class Client extends User implements Serializable {
     /**
      * lista de compras reliazada por el cliente
      */
-    @OneToMany(fetch = FetchType.EAGER)
-    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(schema = "g5reto2", name = "client_purchase")
     private Set<Purchase> purchases;
 
     
     //getters y setters de la entidad cliente//
-    @XmlTransient
     public Date getSignUpDate() {
         return signUpDate;
     }

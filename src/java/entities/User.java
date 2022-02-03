@@ -155,11 +155,12 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
+    @XmlTransient
     public Date getLastPasswordChange() {
         return lastPasswordChange;
     }
-    @XmlTransient
+    
     public void setLastPasswordChange(Date lastPasswordChange) {
         this.lastPasswordChange = lastPasswordChange;
     }
