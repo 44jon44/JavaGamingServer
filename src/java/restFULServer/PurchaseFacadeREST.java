@@ -5,6 +5,8 @@
  */
 package restFULServer;
 
+import entities.Client;
+import entities.Game;
 import entities.IdPurchase;
 import entities.Purchase;
 import java.text.ParseException;
@@ -189,7 +191,28 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
         return purchase;
     }
     
-    
+    @GET
+    @Path("createPurchase/{idClient}/{idGame}/{purchaseDate}")
+    @Consumes({MediaType.APPLICATION_XML})
+    public Purchase createPurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame")Integer idGame,@PathParam("purchaseDate") String purchaseDate) {
+        Purchase purchase = null;
+        try
+        {
+            purchase = new Purchase();
+            Client client = em.find(Client.class, idClient);
+            Game game = em.find(Game.class, idGame);
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            purchase.setClient(client);
+            purchase.setGame(game);
+            purchase.setPurchaseDate(purDate);
+            purchase.setIdPurchase(new IdPurchase(idClient, idGame));
+            super.create(purchase);
+        } catch (ParseException ex)
+        {
+            LOG.log(Level.SEVERE, "La fecha no tiene el formato adecuado. El formato correcto es: yyyy-MM-dd", ex);
+        }
+        return purchase;
+    }
     @Override
     protected EntityManager getEntityManager() {
         return em;
