@@ -36,11 +36,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name="findGamebyGenreAndPlat",query="SELECT g FROM Game g "
            + "WHERE g.genre =:genre AND g.idGame in (SELECT g2 FROM Platform p "
            + "JOIN p.games g2 WHERE p.name=:name) "
-    )
-    ,
-   @NamedQuery(name = "findGamebyPegi", query = "SELECT a FROM Game a WHERE a.pegi =:pegi"),
+    ),
+   @NamedQuery(name = "findGamebyPegi", query = "SELECT g FROM Game g WHERE g.pegi =:pegi"),
    @NamedQuery(name = "findGamebyGenre",query = "SELECT g FROM Game g WHERE g.genre =:genre"),
-   @NamedQuery(name = "findGamebyName", query = "SELECT a FROM Game a WHERE a.name =:name"),
+   @NamedQuery(name = "findGamebyName", query = "SELECT g FROM Game g WHERE g.name =:name")
 })
 public class Game implements Serializable {
 
