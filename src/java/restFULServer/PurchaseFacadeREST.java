@@ -165,11 +165,11 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     @Path("deletePurchase/{idClient}/{idGame}")
     public void deletePurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame") Integer idGame) {
         LOG.info("Borrando compra...");
-        //por las claves foraneas primero debemos borrar las entradas en las tablas client_purchase y game_purchase
-        String deleteClientPurchase = String.format("DELETE FROM g5reto2.client_purchase WHERE purchases_client_idUser = %d AND purchases_game_idGame = %d",idClient,idGame);
-        em.createNativeQuery(deleteClientPurchase).executeUpdate();
-        String deleteGamePurchase = String.format("DELETE FROM g5reto2.game_purchase WHERE purchases_client_idUser = %d AND purchases_game_idGame = %d",idClient,idGame);
-        em.createNativeQuery(deleteGamePurchase).executeUpdate();
+        //por las claves foraneas primero debemos borrar las entradas en las tablas g5reto2.client_purchase y g5reto2.game_purchase
+        String deleteClientPurchaseQuery = String.format("DELETE FROM g5reto2.client_purchase WHERE purchases_client_idUser = %d AND purchases_game_idGame = %d",idClient,idGame);
+        em.createNativeQuery(deleteClientPurchaseQuery).executeUpdate();
+        String deleteGamePurchaseQuery = String.format("DELETE FROM g5reto2.game_purchase WHERE purchases_client_idUser = %d AND purchases_game_idGame = %d",idClient,idGame);
+        em.createNativeQuery(deleteGamePurchaseQuery).executeUpdate();
         em.createNamedQuery("deletePurchase").setParameter("idClient", idClient).setParameter("idGame", idGame).executeUpdate();
     }
     
