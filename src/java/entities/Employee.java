@@ -59,7 +59,6 @@ public class Employee extends User implements Serializable {
      *
      * @return hiringDate
      */
-    @XmlTransient
     public Date getHiringDate() {
         return hiringDate;
     }
