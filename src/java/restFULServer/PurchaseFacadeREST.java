@@ -5,9 +5,16 @@
  */
 package restFULServer;
 
+import entities.Client;
+import entities.Game;
 import entities.IdPurchase;
 import entities.Purchase;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,6 +37,8 @@ import javax.ws.rs.core.PathSegment;
 @Path("purchase")
 public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
 
+    private static final Logger LOG = Logger.getLogger(PurchaseFacadeREST.class.getName());
+    
     @PersistenceContext(unitName = "JavaGamingServerPU")
     private EntityManager em;
 
@@ -108,6 +117,102 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
         return String.valueOf(super.count());
     }
 
+    //Consultas personalizadas
+    @GET
+    @Path("find/id/{idClient}/{idGame}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Purchase findPurchaseById(@PathParam("idClient") Integer idClient,@PathParam("idGame") Integer idGame) {
+        Purchase purchaseById;
+        purchaseById = (Purchase) em.createNamedQuery("findPurchaseById").setParameter("idClient", idClient).setParameter("idGame", idGame).getResultList().get(0);
+        return purchaseById;
+    }
+    
+    @GET
+    @Path("find/idClient/{idClient}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByClientId(@PathParam("idClient") Integer idClient) {
+        List<Purchase>  purchasesByClientId;
+        purchasesByClientId = em.createNamedQuery("findPurchasesByClientId").setParameter("idClient", idClient).getResultList();
+        return purchasesByClientId;
+    }
+    
+    @GET
+    @Path("find/date/{purchaseDate}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByPurchaseDate(@PathParam("purchaseDate") String purchaseDate) {
+        List<Purchase>  purchasesByPurchaseDate = null;
+        try {
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            
+            purchasesByPurchaseDate = em.createNamedQuery("findPurchasesByPurchaseDate").setParameter("purchaseDate", purDate).getResultList();
+            
+        } catch (ParseException ex) {
+            Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return purchasesByPurchaseDate;
+    }
+    
+    @GET
+    @Path("find/price/{price}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByPrice(@PathParam("price") Float price) {
+        List<Purchase>  purchasesByPrice;  
+        
+        purchasesByPrice = em.createNamedQuery("findPurchasesByPrice").setParameter("price", price).getResultList();
+            
+        return purchasesByPrice;
+    }
+    
+    @DELETE
+    @Path("deletePurchase/{idClient}/{idGame}")
+    public void deletePurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame") Integer idGame) {
+        LOG.info("Borrando compra...");
+        //por las claves foraneas primero debemos borrar las entradas en las tablas g5reto2.client_purchase y g5reto2.game_purchase
+        String deleteClientPurchaseQuery = String.format("DELETE FROM g5reto2.client_purchase WHERE purchases_client_idUser = %d AND purchases_game_idGame = %d",idClient,idGame);
+        em.createNativeQuery(deleteClientPurchaseQuery).executeUpdate();
+        String deleteGamePurchaseQuery = String.format("DELETE FROM g5reto2.game_purchase WHERE purchases_client_idUser = %d AND purchases_game_idGame = %d",idClient,idGame);
+        em.createNativeQuery(deleteGamePurchaseQuery).executeUpdate();
+        em.createNamedQuery("deletePurchase").setParameter("idClient", idClient).setParameter("idGame", idGame).executeUpdate();
+    }
+    
+    @GET
+    @Path("updatePurchase/{idClient}/{idGame}/{purchaseDate}")
+    public Purchase updatePurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame")Integer idGame,@PathParam("purchaseDate") String purchaseDate){
+        Purchase purchase = null;
+        try {
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            purchase = findPurchaseById(idClient, idGame);
+            purchase.setPurchaseDate(purDate);
+            em.merge(purchase);
+            em.flush();
+        } catch (ParseException ex) {
+            Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return purchase;
+    }
+    
+    @GET
+    @Path("createPurchase/{idClient}/{idGame}/{purchaseDate}")
+    @Consumes({MediaType.APPLICATION_XML})
+    public Purchase createPurchase(@PathParam("idClient") Integer idClient, @PathParam("idGame")Integer idGame,@PathParam("purchaseDate") String purchaseDate) {
+        Purchase purchase = null;
+        try
+        {
+            purchase = new Purchase();
+            Client client = em.find(Client.class, idClient);
+            Game game = em.find(Game.class, idGame);
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            purchase.setClient(client);
+            purchase.setGame(game);
+            purchase.setPurchaseDate(purDate);
+            purchase.setIdPurchase(new IdPurchase(idClient, idGame));
+            super.create(purchase);
+        } catch (ParseException ex)
+        {
+            LOG.log(Level.SEVERE, "La fecha no tiene el formato adecuado. El formato correcto es: yyyy-MM-dd", ex);
+        }
+        return purchase;
+    }
     @Override
     protected EntityManager getEntityManager() {
         return em;

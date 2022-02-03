@@ -26,6 +26,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Clase de la que heredan Client y Employee.
@@ -146,19 +147,20 @@ public class User implements Serializable {
     public void setPrivilege(UserPrivilege privilege) {
         this.privilege = privilege;
     }
-
+    @XmlTransient
     public String getPassword() {
         return password;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
+    @XmlTransient
     public Date getLastPasswordChange() {
         return lastPasswordChange;
     }
-
+    
     public void setLastPasswordChange(Date lastPasswordChange) {
         this.lastPasswordChange = lastPasswordChange;
     }

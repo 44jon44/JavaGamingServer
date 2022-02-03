@@ -14,10 +14,14 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.Cascade;
 
 /**
  * entidad cliente  que es extiende de la entidad user
@@ -26,13 +30,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @DiscriminatorValue("CLIENT")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "findClientById", query = "SELECT u FROM User u WHERE u.idUser =:idClient AND u.privilege = :privilege"
+    ),
+    @NamedQuery(name = "findClientByFullName", query = "SELECT u FROM User u WHERE u.fullName =:fullName AND u.privilege = :privilege"
+    ),
+    @NamedQuery(name = "findClientByLogin", query = "SELECT u FROM User u WHERE u.login =:login AND u.privilege = :privilege"
+    ),
+    @NamedQuery(name = "findClientByEmail", query = "SELECT u FROM User u WHERE u.email =:email AND u.privilege = :privilege"
+     )
+})
 public class Client extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
      * Fecha en la que se ha dado de alta el cliente.
      */
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date signUpDate;
 
     /**
@@ -51,7 +65,8 @@ public class Client extends User implements Serializable {
     public void setSignUpDate(Date signUpDate) {
         this.signUpDate = signUpDate;
     }
-
+    
+    @XmlTransient
     public Set<Purchase> getPurchases() {
         return purchases;
     }

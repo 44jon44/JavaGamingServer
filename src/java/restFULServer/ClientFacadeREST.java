@@ -6,7 +6,10 @@
 package restFULServer;
 
 import entities.Client;
+import entities.UserPrivilege;
+import entities.UserStatus;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +30,8 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 @Path("client")
 public class ClientFacadeREST extends AbstractFacade<Client> {
+
+    private static final Logger LOG = Logger.getLogger(ClientFacadeREST.class.getName());
 
     @PersistenceContext(unitName = "JavaGamingServerPU")
     private EntityManager em;
@@ -66,6 +71,7 @@ public class ClientFacadeREST extends AbstractFacade<Client> {
     @Override
     @Produces({MediaType.APPLICATION_XML})
     public List<Client> findAll() {
+        LOG.info("Cargando clientes");
         return super.findAll();
     }
 
@@ -82,7 +88,45 @@ public class ClientFacadeREST extends AbstractFacade<Client> {
     public String countREST() {
         return String.valueOf(super.count());
     }
-
+    
+    //Consultas personalizadas
+    @GET
+    @Path("find/fullName/{fullName}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Client> findClientByFullName(@PathParam("fullName") String fullName) {
+        List<Client>  clientsByFullName = null;
+        clientsByFullName = em.createNamedQuery("findClientByFullName").setParameter("fullName", fullName).setParameter("privilege", UserPrivilege
+        .CLIENT).getResultList();
+        return clientsByFullName;
+    }
+    
+    @GET
+    @Path("find/id/{idClient}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Client findClientById(@PathParam("idClient") Integer idClient) {
+        Client client;
+        client = (Client)em.createNamedQuery("findClientById").setParameter("idClient", idClient).setParameter("privilege", UserPrivilege.CLIENT).getResultList().get(0);
+        return client;
+    }
+    
+    @GET
+    @Path("find/login/{login}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Client findClientByLogin(@PathParam("login") String login) {
+        Client client;
+        client = (Client)em.createNamedQuery("findClientByLogin").setParameter("login", login).setParameter("privilege", UserPrivilege.CLIENT).getResultList().get(0);
+        return client;
+    }
+    
+    @GET
+    @Path("find/email/{email}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Client findClientByEmail(@PathParam("email") String email) {
+        Client client;
+        client = (Client)em.createNamedQuery("findClientByEmail").setParameter("email", email).setParameter("privilege", UserPrivilege.CLIENT).getResultList().get(0);
+        return client;
+    }
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
