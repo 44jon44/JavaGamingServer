@@ -6,13 +6,17 @@
 package restFULServer;
 
 import entities.Employee;
+import entities.UserPrivilege;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -27,7 +31,9 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 @Path("employee")
 public class EmployeeFacadeREST extends AbstractFacade<Employee> {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(EmployeeFacadeREST.class.getName());
+    
     @PersistenceContext(unitName = "JavaGamingServerPU")
     private EntityManager em;
 
@@ -54,7 +60,7 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
     public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
     }
-
+    
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML})
@@ -87,5 +93,38 @@ public class EmployeeFacadeREST extends AbstractFacade<Employee> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+     @GET
+    @Path("fullName/{fullName}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Employee> employeesByName(@PathParam("fullName") String fullName) {
+        List<Employee> employeesByName = null;
+        try {
+            LOGGER.info("Filtrado por nombre");
+            employeesByName = em.createNamedQuery("employeesByName")
+                    .setParameter("fullName", fullName)
+                    .setParameter("privilege", UserPrivilege.EMPLOYEE).getResultList();
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Error al buscar empleados por nombre{0}", ex.getLocalizedMessage());
+            throw new InternalServerErrorException(ex);
+        }
+        return employeesByName;
+    }
+    @GET
+    @Path("salary/{salary}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Employee> employeeBySalary(@PathParam("salary") String salary) {
+        List<Employee> orderEmployeeBySalary = null;
+        try {
+            LOGGER.info("Orden por salario");
+            orderEmployeeBySalary = em.createNamedQuery("employeeBySalary")
+                    .setParameter("salary", salary)
+                    
+                    .getResultList();
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Error al buscar empleados por salario{0}", ex.getLocalizedMessage());
+            throw new AbstractMethodError();
+        }
+        return orderEmployeeBySalary;
+    }
+
 }

@@ -30,19 +30,14 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "platform", schema = "g5reto2")
-@NamedQueries({
     @NamedQuery(name = "findPlatformsByName",
             query = "SELECT p FROM Platform p WHERE p.name=:name")
-    ,
-    @NamedQuery(name = "",
-            query = "")
-})
 @XmlRootElement
 public class Platform implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
-     * Clave unica autogenerada para la plataforma
+     * Clave unica autogenerada  para la plataforma
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -68,6 +63,7 @@ public class Platform implements Serializable {
      *
      * @return
      */
+
     public Integer getIdPlatform() {
         return idPlatform;
     }

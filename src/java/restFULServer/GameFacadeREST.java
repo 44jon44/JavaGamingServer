@@ -7,12 +7,15 @@ package restFULServer;
 
 import entities.Game;
 import java.util.List;
+
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -28,6 +31,8 @@ import javax.ws.rs.core.MediaType;
 @Path("game")
 public class GameFacadeREST extends AbstractFacade<Game> {
 
+    private static final Logger LOGGER = Logger.getLogger(GameFacadeREST.class.getName());
+
     @PersistenceContext(unitName = "JavaGamingServerPU")
     private EntityManager em;
 
@@ -40,7 +45,10 @@ public class GameFacadeREST extends AbstractFacade<Game> {
     @Override
     @Consumes({MediaType.APPLICATION_XML})
     public void create(Game entity) {
-        super.create(entity);
+        if(!em.contains(entity)){
+            em.merge(entity);
+        }
+        em.flush();
     }
 
     @PUT
@@ -89,4 +97,74 @@ public class GameFacadeREST extends AbstractFacade<Game> {
         return em;
     }
 
+////////////////////////////////////////////////////////////////////////////////
+    @GET
+    @Path("genre/{genre}/{name}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Game> findGamebyGenreAndPlat(@PathParam("genre") String genre,@PathParam("name") String name) {
+        List<Game> gamesbyGenre = null;
+        try {
+            LOGGER.info("filtrado por genero");
+            gamesbyGenre = em.createNamedQuery("findGamebyGenreAndPlat")
+                    .setParameter("genre", genre).setParameter("name", name).getResultList();
+        } catch (Exception ex) {
+            LOGGER.severe("error al listar juegos por genero."
+                    + ex.getLocalizedMessage());
+            throw new InternalServerErrorException(ex);
+        }
+        return gamesbyGenre;
+    }
+
+    @GET
+    @Path("pegi/{pegi}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Game> findGamebyPegi(@PathParam("pegi") Integer pegi) {
+        List<Game> gamesbyPegi = null;
+        try {
+            LOGGER.info("filtrado por genero");
+            gamesbyPegi = em.createNamedQuery("findGamebyPegi")
+                    .setParameter("pegi", pegi).getResultList();
+        } catch (Exception ex) {
+            LOGGER.severe("error al listar juegos por genero."
+                    + ex.getLocalizedMessage());
+            throw new InternalServerErrorException(ex);
+        }
+        return gamesbyPegi;
+    }
+    
+    
+    @GET
+    @Path("genre/{genre}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Game> findGamebyGenre(@PathParam("genre") String genre) {
+        List<Game> gamesbyGenre = null;
+        try {
+            LOGGER.info("filtrado por genero");
+            gamesbyGenre = em.createNamedQuery("findGamebyGenre")
+                    .setParameter("genre", genre).getResultList();
+        } catch (Exception ex) {
+            LOGGER.severe("error al listar juegos por genero."
+                    + ex.getLocalizedMessage());
+            throw new InternalServerErrorException(ex);
+        }
+        return gamesbyGenre;
+    }
+    @GET
+    @Path("name/{name}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Game> findGamebyName(@PathParam("name") String name) {
+        List<Game> gamesbyName = null;
+        try {
+            LOGGER.info("filtrado por Nombre");
+            gamesbyName = em.createNamedQuery("findGamebyName")
+                    .setParameter("name", name).getResultList();
+        } catch (Exception ex) {
+            LOGGER.severe("error al listar juegos por genero."
+                    + ex.getLocalizedMessage());
+            throw new InternalServerErrorException(ex);
+        }
+        return gamesbyName;
+    }
+
+////////////////////////////////////////////////////////////////////////////////
 }

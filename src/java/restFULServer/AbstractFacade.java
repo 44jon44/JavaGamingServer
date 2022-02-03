@@ -31,14 +31,17 @@ public abstract class AbstractFacade<T> {
     }
 
     public void edit(T entity) {
-        getEntityManager().merge(entity);
+        if (!getEntityManager().contains(entity)){
+            getEntityManager().merge(entity);
+        }
+        getEntityManager().flush();
     }
 
     public void remove(T entity) {
         getEntityManager().remove(getEntityManager().merge(entity));
     }
 
-    public T find(Object id) {
+    public T find(Object  id) {
         return getEntityManager().find(entityClass, id);
     }
 

@@ -19,11 +19,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class IdPurchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+    // la id de de un juego
     private Integer idGame;
-    
+    // la id de de un  cliente
     private Integer idClient;
-
+    //getter y setter
     public Integer getIdGame() {
         return idGame;
     }
@@ -64,7 +64,7 @@ public class IdPurchase implements Serializable {
         }
         return true;
     }
-
+// muestra la salida  de  idpurchase
     @Override
     public String toString() {
         return "IdPurchase{" + "idGame=" + idGame + ", idClient=" + idClient + '}';
