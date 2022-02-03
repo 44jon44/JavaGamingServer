@@ -5,10 +5,8 @@
  */
 package restFULServer;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import entities.Platform;
 import java.util.List;
-import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -94,11 +92,9 @@ public class PlatformFacadeREST extends AbstractFacade<Platform> {
     @Path("name/{name}")
     @Produces({MediaType.APPLICATION_XML})
     public List <Platform> findPlatformsByName(@PathParam("name") String name) {
-        LOGGER.log(Level.INFO, "Metodo find by name de la clase platform");
         try {
             return super.findPlatformsByName(name);
         } catch (Exception ex) {
-            LOGGER.severe(ex.getMessage());
             throw new InternalServerErrorException(ex.getMessage());
         }
     }

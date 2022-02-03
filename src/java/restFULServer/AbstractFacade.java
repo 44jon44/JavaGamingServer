@@ -5,11 +5,8 @@
  */
 package restFULServer;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
-import entities.Game;
 import entities.Platform;
 import java.util.List;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 
 /**
@@ -74,7 +71,6 @@ public abstract class AbstractFacade<T> {
      * @throws Exception 
      */
     List<Platform> findPlatformsByName(String name) throws Exception {
-        LOGGER.log(Level.INFO, "Metodo getSectorsByName de la clase AbstractFacade");
         try {
             return getEntityManager().createNamedQuery("findPlatformsByName")
                     .setParameter("name", name)
