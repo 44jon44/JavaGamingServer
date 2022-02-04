@@ -147,7 +147,7 @@ public class User implements Serializable {
     public void setPrivilege(UserPrivilege privilege) {
         this.privilege = privilege;
     }
-    @XmlTransient
+    //@XmlTransient
     public String getPassword() {
         return password;
     }
