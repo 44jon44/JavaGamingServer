@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -155,12 +156,64 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     @GET
     @Path("find/price/{price}")
     @Produces({MediaType.APPLICATION_XML})
-    public List<Purchase> findPurchasesByPrice(@PathParam("price") Float price) {
+    public List<Purchase> findPurchasesByPrice(@PathParam("idClient") Float price) {
         List<Purchase>  purchasesByPrice;  
         
         purchasesByPrice = em.createNamedQuery("findPurchasesByPrice").setParameter("price", price).getResultList();
             
         return purchasesByPrice;
+    }
+    
+    @GET
+    @Path("find/{idClient}/{purchaseDate}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByClientAndPurchaseDate(@PathParam("idClient") Integer idClient, @PathParam("purchaseDate") String purchaseDate) {
+        List<Purchase>  purchasesByClientAndPurchaseDate = null;
+        try {
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            purchasesByClientAndPurchaseDate = findPurchasesByClientId(idClient).stream().filter(p -> p.getPurchaseDate() == purDate).collect(Collectors.toList());         
+        } catch (ParseException ex) {
+            Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return purchasesByClientAndPurchaseDate;
+    }
+    
+    @GET
+    @Path("find/{idClient}/{minPrice}/{maxPrice}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByClientAndPriceRange(@PathParam("idClient") Integer idClient, @PathParam("minPrice") Float minPrice, @PathParam("maxPrice") Float maxPrice) {
+        List<Purchase>  purchasesByClientAndPriceRange;
+        purchasesByClientAndPriceRange = findPurchasesByClientId(idClient).stream().filter(p -> p.getGame().getPrice() >= minPrice && p.getGame().getPrice() <= maxPrice).collect(Collectors.toList());         
+        return purchasesByClientAndPriceRange;
+    }
+    
+    @GET
+    @Path("find/{purchaseDate}/{minPrice}/{maxPrice}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByPurDateAndPriceRange(@PathParam("purchaseDate") String purchaseDate, @PathParam("minPrice") Float minPrice, @PathParam("maxPrice") Float maxPrice) {
+        List<Purchase>  purchasesByPurDateAndPriceRange = null;
+        try {
+            
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            purchasesByPurDateAndPriceRange = findAll().stream().filter(p -> p.getPurchaseDate() == purDate && p.getGame().getPrice() >= minPrice && p.getGame().getPrice() <= maxPrice).collect(Collectors.toList());
+        } catch (ParseException ex) {
+            Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return purchasesByPurDateAndPriceRange;
+    }
+    
+    @GET
+    @Path("find/{idClient}/{purchaseDate}/{minPrice}/{maxPrice}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByClientAndPurDateAndPriceRange(@PathParam("idClient") Integer idClient,@PathParam("purchaseDate") String purchaseDate, @PathParam("minPrice") Float minPrice, @PathParam("maxPrice") Float maxPrice) {
+        List<Purchase>  purchasesByClientAndPurDateAndPriceRange = null;
+        try {
+            Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
+            purchasesByClientAndPurDateAndPriceRange = findPurchasesByClientId(idClient).stream().filter(p -> p.getPurchaseDate() == purDate && p.getGame().getPrice() >= minPrice && p.getGame().getPrice() <= maxPrice).collect(Collectors.toList());
+        } catch (ParseException ex) {
+            Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return purchasesByClientAndPurDateAndPriceRange;
     }
     
     @DELETE
