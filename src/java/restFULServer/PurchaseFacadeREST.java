@@ -156,11 +156,12 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     @GET
     @Path("find/price/{price}")
     @Produces({MediaType.APPLICATION_XML})
-    public List<Purchase> findPurchasesByPrice(@PathParam("idClient") Float price) {
+    public List<Purchase> findPurchasesByPrice(@PathParam("price") Float price) {
+        LOG.info("findPurchasesByPrice(); IN");
         List<Purchase>  purchasesByPrice;  
         
         purchasesByPrice = em.createNamedQuery("findPurchasesByPrice").setParameter("price", price).getResultList();
-            
+        LOG.log(Level.INFO, "Purchases find: {0}", purchasesByPrice.size());
         return purchasesByPrice;
     }
     
@@ -171,7 +172,7 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
         List<Purchase>  purchasesByClientAndPurchaseDate = null;
         try {
             Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
-            purchasesByClientAndPurchaseDate = findPurchasesByClientId(idClient).stream().filter(p -> p.getPurchaseDate() == purDate).collect(Collectors.toList());         
+            purchasesByClientAndPurchaseDate = findPurchasesByClientId(idClient).stream().filter(p -> p.getPurchaseDate().compareTo(purDate) == 0).collect(Collectors.toList());         
         } catch (ParseException ex) {
             Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -179,7 +180,7 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     }
     
     @GET
-    @Path("find/{idClient}/{minPrice}/{maxPrice}")
+    @Path("findPurchases/{idClient}/{minPrice}/{maxPrice}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Purchase> findPurchasesByClientAndPriceRange(@PathParam("idClient") Integer idClient, @PathParam("minPrice") Float minPrice, @PathParam("maxPrice") Float maxPrice) {
         List<Purchase>  purchasesByClientAndPriceRange;
@@ -195,7 +196,7 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
         try {
             
             Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
-            purchasesByPurDateAndPriceRange = findAll().stream().filter(p -> p.getPurchaseDate() == purDate && p.getGame().getPrice() >= minPrice && p.getGame().getPrice() <= maxPrice).collect(Collectors.toList());
+            purchasesByPurDateAndPriceRange = findAll().stream().filter(p -> p.getPurchaseDate().compareTo(purDate) == 0 && p.getGame().getPrice() >= minPrice && p.getGame().getPrice() <= maxPrice).collect(Collectors.toList());
         } catch (ParseException ex) {
             Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -203,13 +204,13 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     }
     
     @GET
-    @Path("find/{idClient}/{purchaseDate}/{minPrice}/{maxPrice}")
+    @Path("find/idClient/{idClient}/{purchaseDate}/{minPrice}/{maxPrice}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Purchase> findPurchasesByClientAndPurDateAndPriceRange(@PathParam("idClient") Integer idClient,@PathParam("purchaseDate") String purchaseDate, @PathParam("minPrice") Float minPrice, @PathParam("maxPrice") Float maxPrice) {
         List<Purchase>  purchasesByClientAndPurDateAndPriceRange = null;
         try {
             Date purDate=new SimpleDateFormat("yyyy-MM-dd").parse(purchaseDate);
-            purchasesByClientAndPurDateAndPriceRange = findPurchasesByClientId(idClient).stream().filter(p -> p.getPurchaseDate() == purDate && p.getGame().getPrice() >= minPrice && p.getGame().getPrice() <= maxPrice).collect(Collectors.toList());
+            purchasesByClientAndPurDateAndPriceRange = findPurchasesByClientId(idClient).stream().filter(p -> p.getPurchaseDate().compareTo(purDate) == 0 && p.getGame().getPrice() >= minPrice && p.getGame().getPrice() <= maxPrice).collect(Collectors.toList());
         } catch (ParseException ex) {
             Logger.getLogger(PurchaseFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
         }
