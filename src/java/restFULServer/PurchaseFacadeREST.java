@@ -166,6 +166,17 @@ public class PurchaseFacadeREST extends AbstractFacade<Purchase> {
     }
     
     @GET
+    @Path("find/price/{minPrice}/{maxPrice}")
+    @Produces({MediaType.APPLICATION_XML})
+    public List<Purchase> findPurchasesByPriceRange(@PathParam("minPrice") Float minPrice,@PathParam("maxPrice") Float maxPrice) {
+        LOG.info("findPurchasesByPriceRange(); IN");
+        List<Purchase>  purchasesByPriceRange;  
+        purchasesByPriceRange = findAll().stream().filter(p -> p.getGame().getPrice() >= minPrice && p.getGame().getPrice() <= maxPrice).collect(Collectors.toList());
+        LOG.log(Level.INFO, "Purchases find: {0}", purchasesByPriceRange.size());
+        return purchasesByPriceRange;
+    }
+    
+    @GET
     @Path("find/{idClient}/{purchaseDate}")
     @Produces({MediaType.APPLICATION_XML})
     public List<Purchase> findPurchasesByClientAndPurchaseDate(@PathParam("idClient") Integer idClient, @PathParam("purchaseDate") String purchaseDate) {
